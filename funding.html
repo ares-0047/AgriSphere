@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSphere - Funding Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Enhanced header with hero section */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #16a34a, #22c55e, #16a34a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #4b5563;
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Enhanced stats section */
+        .funding-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #16a34a;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Enhanced filter bar */
+        .filter-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+        }
+
+        .filter-bar {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .search-input {
+            position: relative;
+        }
+
+        .search-input input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input input:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            outline: none;
+        }
+
+        .search-input::before {
+            content: '🔍';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 1.2rem;
+        }
+
+        .filter-select {
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            outline: none;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .toggle-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .toggle-btn.active {
+            background: #16a34a;
+            color: white;
+            border-color: #16a34a;
+        }
+
+        /* Enhanced project cards */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(22, 163, 74, 0.2);
+        }
+
+        .project-header {
+            padding: 2rem 2rem 1rem;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-bottom: 1px solid rgba(22, 163, 74, 0.1);
+        }
+
+        .farmer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .farmer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .farmer-details h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .farmer-location {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .crop-badge {
+            background: rgba(22, 163, 74, 0.1);
+            color: #16a34a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .project-content {
+            padding: 1.5rem 2rem;
+        }
+
+        .funding-progress {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-amount {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .progress-percentage {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #16a34a;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+            border-radius: 6px;
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .invest-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .invest-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .invest-btn:hover::before {
+            left: 100%;
+        }
+
+        .invest-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3);
+        }
+
+        .invest-btn.funded {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .invest-btn.funded:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .view-details-btn {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            color: #16a34a;
+            border: 2px solid #16a34a;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-details-btn:hover {
+            background: #16a34a;
+            color: white;
+        }
+
+        .investor-portal {
+            background: white;
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.12);
+            margin-bottom: 3rem;
+        }
+
+        .investor-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 2rem;
+            align-items: stretch;
+        }
+
+        .investor-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .investor-card h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .investor-card p {
+            color: #4b5563;
+            line-height: 1.75;
+            font-size: 1rem;
+        }
+
+        .investor-bullets {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .investor-bullets li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            color: #374151;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .investor-bullets li::before {
+            content: '•';
+            color: #16a34a;
+            font-weight: 900;
+            margin-top: 0.2rem;
+        }
+
+        .loan-info {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .loan-card {
+            background: rgba(22, 163, 74, 0.08);
+            border-radius: 18px;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(22, 163, 74, 0.12);
+            color: #111827;
+        }
+
+        .loan-card strong {
+            display: block;
+            font-size: 1.4rem;
+            color: #16a34a;
+            margin-bottom: 0.35rem;
+        }
+
+        .investor-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+            border-radius: 14px;
+            border: 2px solid #16a34a;
+            color: #16a34a;
+            background: rgba(22, 163, 74, 0.08);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            width: fit-content;
+            margin-top: 1rem;
+        }
+
+        .investor-link:hover {
+            background: #16a34a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .iframe-card {
+            background: #f8fafc;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(22, 163, 74, 0.12);
+            min-height: 460px;
+        }
+
+        .investor-frame {
+            width: 100%;
+            height: 100%;
+            min-height: 460px;
+            border: none;
+        }
+
+        /* Legacy table view (hidden by default) */
+        .table-container {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+        }
+
+        .table-container.show {
+            display: block;
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-container th {
+            background: #f8fafc;
+            padding: 1.5rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .table-container td {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table-container tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Loading and empty states */
+        .loading-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6b7280;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #16a34a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6b7280;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+
+            .filter-bar {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 1rem;
+            }
+
+            .page-header {
+                padding: 2rem 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-header,
+            .project-content {
+                padding: 1.5rem;
+            }
+
+            .funding-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .funding-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .project-actions {
+                flex-direction: column;
+            }
+
+            .invest-btn,
+            .view-details-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Enhanced header -->
+        <div class="page-header">
+            <h1>🌾 AgriFund</h1>
+            <p class="subtitle">Empowering farmers through community-driven investment and sustainable agriculture funding.</p>
+        </div>
+
+        <!-- Funding statistics -->
+        <div class="funding-stats" id="fundingStats">
+            <div class="stat-card">
+                <span class="stat-value" id="totalProjects">0</span>
+                <span class="stat-label">Active Projects</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="totalRaised">₹0</span>
+                <span class="stat-label">Total Raised</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="avgProgress">0%</span>
+                <span class="stat-label">Avg. Progress</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="fundedProjects">0</span>
+                <span class="stat-label">Fully Funded</span>
+            </div>
+        </div>
+
+        <!-- Enhanced filter section -->
+        <div class="filter-section">
+            <div class="filter-bar">
+                <div class="search-input">
+                    <input type="text" id="searchInput" placeholder="Search farmers, locations, or crops..." onkeyup="filterProjects()">
+                </div>
+                <select id="cropFilter" class="filter-select" onchange="filterProjects()">
+                    <option value="ALL">All Crops</option>
+                    <option value="Wheat">🌾 Wheat</option>
+                    <option value="Cotton">🌿 Cotton</option>
+                    <option value="Soybean">🫘 Soybean</option>
+                    <option value="Rice">🌾 Rice</option>
+                    <option value="Sugarcane">🎋 Sugarcane</option>
+                    <option value="Maize">🌽 Maize</option>
+                </select>
+                <select id="sortFilter" class="filter-select" onchange="filterProjects()">
+                    <option value="default">Sort by: Default</option>
+                    <option value="progress">Progress: Low to High</option>
+                    <option value="progress-desc">Progress: High to Low</option>
+                    <option value="goal">Goal: Low to High</option>
+                    <option value="goal-desc">Goal: High to Low</option>
+                </select>
+                <div class="view-toggle">
+                    <button class="toggle-btn active" onclick="setView('cards')">📋 Cards</button>
+                    <button class="toggle-btn" onclick="setView('table')">📊 Table</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investor iframe portal -->
+        <section class="investor-portal">
+            <div class="investor-grid">
+                <div class="investor-card">
+                    <div>
+                        <h2>Investor Funding Dashboard</h2>
+                        <p>Invite investors to fund AgriSphere’s loan pool. We convert the capital into farmer micro-loans with a stable interest return while preserving transparency and social impact.</p>
+                        <ul class="investor-bullets">
+                            <li>Investor funds are pooled, managed, and deployed as sustainable farmer loans.</li>
+                            <li>Farmers receive growth capital while investors benefit from a fixed interest yield.</li>
+                            <li>Loan disbursements are tracked alongside real-time farmer funding progress.</li>
+                        </ul>
+                    </div>
+
+                    <div class="loan-info">
+                        <div class="loan-card">
+                            <strong>8%</strong>
+                            Loan APR
+                        </div>
+                        <div class="loan-card">
+                            <strong>12</strong>
+                            Month Term
+                        </div>
+                        <div class="loan-card">
+                            <strong>100%</strong>
+                            Trackable Repayments
+                        </div>
+                    </div>
+
+                    <a class="investor-link" href="investor.html" target="_blank">Open Investor Portal</a>
+                </div>
+                <div class="iframe-card">
+                    <iframe class="investor-frame" src="investor.html" title="Investor Funding Portal"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects grid -->
+        <div class="projects-grid" id="projectsGrid">
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading farming projects...</p>
+            </div>
+        </div>
+
+        <!-- Legacy table view -->
+        <div class="table-container" id="tableContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Profile ID</th>
+                        <th>Farmer Details</th>
+                        <th>Target Crop</th>
+                        <th>Capital Goal</th>
+                        <th>Capital Raised</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="ledgerBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const sampleFundingProfiles = [
+            { id: 'F-123', name: 'Arjun Patel', location: 'Madhya Pradesh', crop: 'Wheat', goal: 200000, raised: 120000 },
+            { id: 'F-214', name: 'Sana Roy', location: 'Bihar', crop: 'Rice', goal: 180000, raised: 97000 },
+            { id: 'F-307', name: 'Rahul Desai', location: 'Punjab', crop: 'Cotton', goal: 220000, raised: 134000 },
+            { id: 'F-412', name: 'Anjali Verma', location: 'Uttar Pradesh', crop: 'Maize', goal: 150000, raised: 90000 }
+        ];
+
+        let globalProfiles = [];
+        let currentView = 'cards';
+        const formatter = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0
+        });
+
+        async function loadLedger() {
+            try {
+                const response = await fetch('database.json');
+                const db = await response.json();
+                globalProfiles = db.funding_profiles;
+                updateStats();
+                renderProjects(globalProfiles);
+            } catch (error) {
+                console.error(error);
+                globalProfiles = sampleFundingProfiles;
+                updateStats();
+                renderProjects(globalProfiles);
+                showNotification('Offline investor demo data loaded successfully.', 'info');
+            }
+        }
+
+        function updateStats() {
+            const totalProjects = globalProfiles.length;
+            const totalRaised = globalProfiles.reduce((sum, p) => sum + p.raised, 0);
+            const avgProgress = Math.round(globalProfiles.reduce((sum, p) => sum + (p.raised / p.goal) * 100, 0) / totalProjects);
+            const fundedProjects = globalProfiles.filter(p => p.raised >= p.goal).length;
+
+            document.getElementById('totalProjects').textContent = totalProjects;
+            document.getElementById('totalRaised').textContent = formatter.format(totalRaised);
+            document.getElementById('avgProgress').textContent = `${avgProgress}%`;
+            document.getElementById('fundedProjects').textContent = fundedProjects;
+        }
+
+        function renderProjects(profiles) {
+            const grid = document.getElementById('projectsGrid');
+            const tbody = document.getElementById('ledgerBody');
+
+            if (currentView === 'cards') {
+                grid.innerHTML = '';
+                if (profiles.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <h3>🔍 No Projects Found</h3>
+                            <p>No farming projects match your current filters.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                profiles.forEach((profile, index) => {
+                    const progress = Math.min((profile.raised / profile.goal) * 100, 100);
+                    const isFunded = profile.raised >= profile.goal;
+                    const avatarLetter = profile.name.charAt(0).toUpperCase();
+
+                    const card = document.createElement('div');
+                    card.className = 'project-card';
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    card.innerHTML = `
+                        <div class="project-header">
+                            <div class="farmer-info">
+                                <div class="farmer-avatar">${avatarLetter}</div>
+                                <div class="farmer-details">
+                                    <h3>${profile.name}</h3>
+                                    <div class="farmer-location">📍 ${profile.location}</div>
+                                </div>
+                            </div>
+                            <div class="project-meta">
+                                <div class="meta-item">
+                                    <span>ID: ${profile.id}</span>
+                                </div>
+                                <div class="crop-badge">${profile.crop}</div>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <div class="funding-progress">
+                                <div class="progress-header">
+                                    <span class="progress-amount">${formatter.format(profile.raised)} / ${formatter.format(profile.goal)}</span>
+                                    <span class="progress-percentage">${Math.round(progress)}%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${progress}%"></div>
+                                </div>
+                            </div>
+                            <div class="project-actions">
+                                <button class="invest-btn ${isFunded ? 'funded' : ''}" onclick="${isFunded ? '' : `invest('${profile.id}', ${index})`}">
+                                    ${isFunded ? '🎉 Fully Funded' : '💰 Invest Now'}
+                                </button>
+                                <button class="view-details-btn" onclick="viewDetails('${profile.id}')">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } else {
+                // Table view
+                tbody.innerHTML = '';
+                profiles.forEach((p, index) => {
+                    const progress = (p.raised / p.goal) * 100;
+                    const isFunded = p.raised >= p.goal;
+
+                    const btnClass = isFunded ? 'btn-disabled' : '';
+                    const btnText = isFunded ? 'Fully Funded' : 'Fund Project';
+                    const btnAction = isFunded ? '' : `onclick="invest('${p.id}', ${index})"`;
+
+                    const row = `<tr>
+                        <td style="color: var(--text-secondary); font-family: monospace;">${p.id}</td>
+                        <td><strong>${p.name}</strong><br><span style="font-size: 0.75rem; color: var(--text-secondary);">${p.location}</span></td>
+                        <td class="crop-cell">${p.crop}</td>
+                        <td>${formatter.format(p.goal)}</td>
+                        <td>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+                                <span>${formatter.format(p.raised)}</span>
+                                <span style="color: var(--primary-color); font-weight: bold;">${Math.round(progress)}%</span>
+                            </div>
+                            <div style="width: 100%; height: 6px; background: #e5e7eb; border-radius: 3px;">
+                                <div style="width: ${progress > 100 ? 100 : progress}%; height: 100%; background: var(--primary-color); border-radius: 3px; transition: width 0.5s ease;"></div>
+                            </div>
+                        </td>
+                        <td><button class="${btnClass}" style="padding: 6px 12px; font-size: 0.75rem;" ${btnAction}>${btnText}</button></td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            }
+        }
+
+        function filterProjects() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const cropFilter = document.getElementById('cropFilter').value;
+            const sortFilter = document.getElementById('sortFilter').value;
+
+            let filtered = globalProfiles.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchText) ||
+                                    p.location.toLowerCase().includes(searchText) ||
+                                    p.crop.toLowerCase().includes(searchText);
+                const matchesCrop = cropFilter === "ALL" || p.crop === cropFilter;
+                return matchesSearch && matchesCrop;
+            });
+
+            // Apply sorting
+            switch (sortFilter) {
+                case 'progress':
+                    filtered.sort((a, b) => (a.raised / a.goal) - (b.raised / b.goal));
+                    break;
+                case 'progress-desc':
+                    filtered.sort((a, b) => (b.raised / b.goal) - (a.raised / b.goal));
+                    break;
+                case 'goal':
+                    filtered.sort((a, b) => a.goal - b.goal);
+                    break;
+                case 'goal-desc':
+                    filtered.sort((a, b) => b.goal - a.goal);
+                    break;
+                default:
+                    // Keep original order
+                    break;
+            }
+
+            renderProjects(filtered);
+        }
+
+        function setView(view) {
+            currentView = view;
+            const cardsBtn = document.querySelector('.toggle-btn:nth-child(1)');
+            const tableBtn = document.querySelector('.toggle-btn:nth-child(2)');
+            const grid = document.getElementById('projectsGrid');
+            const table = document.getElementById('tableContainer');
+
+            if (view === 'cards') {
+                cardsBtn.classList.add('active');
+                tableBtn.classList.remove('active');
+                grid.style.display = 'grid';
+                table.classList.remove('show');
+            } else {
+                tableBtn.classList.add('active');
+                cardsBtn.classList.remove('active');
+                grid.style.display = 'none';
+                table.classList.add('show');
+            }
+
+            renderProjects(globalProfiles);
+        }
+
+        function invest(id, index) {
+            const profile = globalProfiles[index];
+            const amount = prompt(`Invest in ${profile.name}'s ${profile.crop} farming project:\n\nCurrent Progress: ${formatter.format(profile.raised)} / ${formatter.format(profile.goal)}\n\nEnter investment amount (₹):`, "5000");
+
+            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+                const investAmount = parseInt(amount);
+
+                // Update local state
+                globalProfiles[index].raised += investAmount;
+
+                // Show success message
+                showNotification(`🎉 Successfully invested ${formatter.format(investAmount)} in ${profile.name}'s project!`, 'success');
+
+                // Update stats and re-render
+                updateStats();
+                filterProjects();
+            }
+        }
+
+        function viewDetails(id) {
+            const profile = globalProfiles.find(p => p.id === id);
+            if (profile) {
+                const progress = Math.round((profile.raised / profile.goal) * 100);
+                const remaining = profile.goal - profile.raised;
+
+                alert(`🌾 Project Details: ${profile.name}
+
+📍 Location: ${profile.location}
+🌱 Crop: ${profile.crop}
+💰 Goal: ${formatter.format(profile.goal)}
+📈 Raised: ${formatter.format(profile.raised)} (${progress}%)
+⏳ Remaining: ${formatter.format(Math.max(remaining, 0))}
+
+${remaining <= 0 ? '🎉 This project is fully funded!' : `Help this farmer reach their goal by investing ${formatter.format(remaining)} more!`}`);
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#16a34a' : '#6b7280'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                font-weight: 600;
+                animation: slideInRight 0.3s ease;
+                max-width: 400px;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Add notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        window.onload = loadLedger;
+    </script>
+</body>
+</html>

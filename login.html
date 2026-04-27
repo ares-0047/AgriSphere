@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSphere - Secure Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: var(--text-primary);
+        }
+
+        /* Enhanced background with more dynamic elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            animation: float 8s ease-in-out infinite;
+            backdrop-filter: blur(1px);
+        }
+
+        .bg-shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 5%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .bg-shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            right: 10%;
+            animation-delay: 2s;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        }
+
+        .bg-shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: 15%;
+            left: 15%;
+            animation-delay: 4s;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+
+        .bg-shape:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            right: 30%;
+            animation-delay: 6s;
+        }
+
+        .bg-shape:nth-child(5) {
+            width: 180px;
+            height: 180px;
+            bottom: 30%;
+            right: 5%;
+            animation-delay: 1s;
+            border-radius: 40% 60% 60% 40% / 40% 60% 40% 60%;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            33% {
+                transform: translateY(-30px) rotate(120deg) scale(1.1);
+            }
+            66% {
+                transform: translateY(20px) rotate(240deg) scale(0.9);
+            }
+        }
+
+        /* Enhanced branding side with more visual elements */
+        .branding-side {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .branding-side::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(22, 163, 74, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(22, 163, 74, 0.05) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .brand-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            animation: glow 3s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 20px rgba(22, 163, 74, 0.3));
+        }
+
+        @keyframes glow {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 20px rgba(22, 163, 74, 0.3));
+            }
+            100% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 30px rgba(22, 163, 74, 0.5));
+            }
+        }
+
+        .brand-title {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #16a34a;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e, #16a34a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-subtitle {
+            font-size: 1.3rem;
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 3rem;
+            max-width: 480px;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(22, 163, 74, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(22, 163, 74, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(22, 163, 74, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #16a34a;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #374151;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.15);
+            border-color: rgba(22, 163, 74, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+            min-width: 1.8rem;
+        }
+
+        .feature-text {
+            font-size: 0.95rem;
+            color: #374151;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Enhanced login form */
+        .login-form-container {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(25px);
+            border-radius: 28px;
+            padding: 3.5rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideInRight 1s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #16a34a, #22c55e, #16a34a, #22c55e);
+            background-size: 300% 100%;
+            animation: gradientFlow 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .form-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #111827, #374151);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-subtitle {
+            color: #6b7280;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* Enhanced input styling */
+        .phone-input-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.4s ease;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .phone-input-container:focus-within {
+            border-color: #16a34a;
+            box-shadow:
+                0 0 0 3px rgba(22, 163, 74, 0.1),
+                0 8px 25px rgba(22, 163, 74, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .country-code {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 1.25rem;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-right: 1px solid #e5e7eb;
+            font-weight: 700;
+            color: #16a34a;
+            z-index: 2;
+            font-size: 1rem;
+        }
+
+        .phone-input {
+            width: 100%;
+            padding: 1.25rem 1.25rem 1.25rem 5.5rem;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+            letter-spacing: 0.5px;
+        }
+
+        .phone-input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        /* Enhanced OTP styling */
+        .otp-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2.5rem 0;
+            perspective: 1000px;
+        }
+
+        .otp-box {
+            width: 4rem;
+            height: 4rem;
+            border: 3px solid #e5e7eb;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #111827;
+            background: white;
+            transition: all 0.4s ease;
+            outline: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .otp-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(22, 163, 74, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .otp-box:focus {
+            border-color: #16a34a;
+            box-shadow:
+                0 0 0 4px rgba(22, 163, 74, 0.1),
+                0 10px 25px rgba(22, 163, 74, 0.2);
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .otp-box:focus::before {
+            left: 100%;
+        }
+
+        .otp-box.filled {
+            border-color: #16a34a;
+            background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(34, 197, 94, 0.05));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.15);
+        }
+
+        /* Enhanced buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(22, 163, 74, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary.loading {
+            pointer-events: none;
+            transform: translateY(0);
+        }
+
+        .btn-primary.loading::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 0.75rem;
+            display: inline-block;
+        }
+
+        /* Enhanced alternative login */
+        .alternative-login {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .alternative-login::before {
+            content: 'or';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0 1rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ivr-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            background: white;
+        }
+
+        .ivr-link:hover {
+            color: #16a34a;
+            background: rgba(22, 163, 74, 0.05);
+            border-color: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(22, 163, 74, 0.2);
+        }
+
+        /* Enhanced success overlay */
+        .success-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(22, 163, 74, 0.95), rgba(34, 197, 94, 0.95));
+            backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.6s ease;
+            z-index: 100;
+            border-radius: 28px;
+        }
+
+        .success-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: successBounce 1s ease-out, glow 2s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
+        }
+
+        @keyframes successBounce {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .success-subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* Enhanced animations */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Enhanced responsive design */
+        @media (max-width: 1024px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .branding-side,
+            .login-side {
+                flex: none;
+                min-height: 50vh;
+            }
+
+            .branding-side {
+                padding: 40px 30px;
+            }
+
+            .login-side {
+                padding: 40px 30px;
+            }
+
+            .brand-title {
+                font-size: 3rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .branding-side,
+            .login-side {
+                padding: 30px 20px;
+            }
+
+            .login-form-container {
+                padding: 2.5rem;
+                margin: 0 10px;
+            }
+
+            .brand-title {
+                font-size: 2.5rem;
+            }
+
+            .form-title {
+                font-size: 1.8rem;
+            }
+
+            .otp-container {
+                gap: 0.75rem;
+            }
+
+            .otp-box {
+                width: 3.5rem;
+                height: 3.5rem;
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* Main container layout */
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        .branding-side {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .branding-content {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .login-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <!-- Enhanced animated background elements -->
+    <div class="bg-elements">
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+    </div>
+
+    <div class="login-container">
+        <!-- Left side - Enhanced Branding -->
+        <div class="branding-side">
+            <div class="branding-content">
+                <div class="brand-icon">🌾</div>
+                <h1 class="brand-title">AgriSphere</h1>
+                <p class="brand-subtitle">
+                    Revolutionizing agriculture through intelligent technology and sustainable farming practices.
+                </p>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Farmers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">2.5M</span>
+                        <span class="stat-label">Acres Managed</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">98%</span>
+                        <span class="stat-label">Success Rate</span>
+                    </div>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">🤖</span>
+                        <span class="feature-text">AI-Powered Crop Intelligence</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text">Real-time Analytics Dashboard</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🌦️</span>
+                        <span class="feature-text">Weather & Climate Insights</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📡</span>
+                        <span class="feature-text">IoT Hardware Integration</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💰</span>
+                        <span class="feature-text">Smart Financial Management</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🔗</span>
+                        <span class="feature-text">Supply Chain Traceability</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right side - Login form -->
+        <div class="login-side">
+            <div class="login-form-container">
+                <!-- Success overlay -->
+                <div class="success-overlay" id="successScreen">
+                    <div class="success-icon">✅</div>
+                    <h2 class="success-title">Verification Successful</h2>
+                    <p class="success-subtitle">Initializing your dashboard...</p>
+                </div>
+
+                <!-- Phone input step -->
+                <div id="stepPhone" class="form-step">
+                    <div class="form-header">
+                        <h2 class="form-title">Welcome Back</h2>
+                        <p class="form-subtitle" id="instructionText">
+                            Enter your mobile number to access your intelligent farming ecosystem.
+                        </p>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Mobile Number</label>
+                        <div class="phone-input-container">
+                            <div class="country-code">+91</div>
+                            <input type="tel" class="phone-input" id="phoneNum" placeholder="98765 43210" maxlength="10" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="requestOTP()" id="btnOtp">
+                        Get Security Code
+                    </button>
+
+                    <div class="alternative-login">
+                        <a class="ivr-link" onclick="alert('Offline IVR Initialized - Playing Audio Prompt...')">
+                            📞 No smartphone? Try the Offline IVR System
+                        </a>
+                    </div>
+                </div>
+
+                <!-- OTP input step -->
+                <div id="stepOTP" class="form-step" style="display: none;">
+                    <div class="form-header">
+                        <h2 class="form-title">Verify Your Number</h2>
+                        <p class="form-subtitle" id="otpInstruction">
+                            Enter the 4-digit security code sent to your phone
+                        </p>
+                    </div>
+
+                    <div class="otp-container" id="otpGrid">
+                        <input type="text" class="otp-box" maxlength="1" onkeyup="moveToNext(this, 'otp2')" oninput="handleOTPInput(this)">
+                        <input type="text" class="otp-box" id="otp2" maxlength="1" onkeyup="moveToNext(this, 'otp3')" oninput="handleOTPInput(this)">
+                        <input type="text" class="otp-box" id="otp3" maxlength="1" onkeyup="moveToNext(this, 'otp4')" oninput="handleOTPInput(this)">
+                        <input type="text" class="otp-box" id="otp4" maxlength="1" onkeyup="verifyOTP()" oninput="handleOTPInput(this)">
+                    </div>
+
+                    <button class="btn-primary" onclick="verifyOTP()" id="btnVerify">
+                        Verify & Secure Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading animation to branding elements
+            const brandingElements = document.querySelectorAll('.brand-icon, .brand-title, .brand-subtitle, .stats-grid, .feature-list');
+            brandingElements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    element.style.transition = 'all 0.8s ease';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            // Add input focus effects
+            const phoneInput = document.getElementById('phoneNum');
+            phoneInput.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            phoneInput.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+
+            // Add OTP input enhancements
+            const otpBoxes = document.querySelectorAll('.otp-box');
+            otpBoxes.forEach((box, index) => {
+                box.addEventListener('input', function() {
+                    if (this.value.length > 0) {
+                        this.classList.add('filled');
+                        // Auto-advance with smooth transition
+                        if (index < otpBoxes.length - 1) {
+                            setTimeout(() => {
+                                otpBoxes[index + 1].focus();
+                            }, 100);
+                        }
+                    } else {
+                        this.classList.remove('filled');
+                    }
+                });
+
+                box.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                        otpBoxes[index - 1].focus();
+                    }
+                });
+            });
+        });
+
+        function requestOTP() {
+            const phone = document.getElementById('phoneNum').value;
+            if(phone.length < 10) {
+                // Enhanced error feedback
+                const inputContainer = document.querySelector('.phone-input-container');
+                inputContainer.style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => {
+                    inputContainer.style.animation = '';
+                }, 500);
+
+                // Show error message
+                const errorMsg = document.createElement('div');
+                errorMsg.textContent = 'Please enter a valid 10-digit mobile number';
+                errorMsg.style.cssText = `
+                    color: #dc2626;
+                    font-size: 0.9rem;
+                    margin-top: 0.5rem;
+                    font-weight: 500;
+                    animation: fadeIn 0.3s ease;
+                `;
+                document.querySelector('.input-group').appendChild(errorMsg);
+                setTimeout(() => errorMsg.remove(), 3000);
+                return;
+            }
+
+            const btn = document.getElementById('btnOtp');
+            btn.classList.add('loading');
+            btn.innerHTML = "Sending Security Code...";
+
+            // Enhanced loading animation
+            const phoneInputContainer = document.querySelector('.phone-input-container');
+            phoneInputContainer.style.pointerEvents = 'none';
+            phoneInputContainer.style.opacity = '0.7';
+
+            setTimeout(() => {
+                document.getElementById('stepPhone').style.display = 'none';
+                document.getElementById('stepOTP').style.display = 'block';
+                document.getElementById('otpInstruction').innerHTML = `We've sent a 4-digit security code to <strong>+91 ${phone}</strong>`;
+
+                // Focus first OTP box with animation
+                const firstOtpBox = document.querySelector('.otp-box');
+                firstOtpBox.focus();
+                firstOtpBox.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    firstOtpBox.style.transform = 'scale(1)';
+                }, 300);
+            }, 1200);
+        }
+
+        function moveToNext(current, nextFieldID) {
+            if (current.value.length >= 1) {
+                if(nextFieldID) {
+                    const nextBox = document.getElementById(nextFieldID);
+                    nextBox.focus();
+                    nextBox.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        nextBox.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            }
+        }
+
+        function handleOTPInput(input) {
+            // Enhanced input handling
+            const value = input.value.replace(/[^0-9]/g, '');
+            input.value = value;
+
+            if (value.length > 0) {
+                input.classList.add('filled');
+            } else {
+                input.classList.remove('filled');
+            }
+
+            // Auto-advance logic
+            if (value.length >= 1) {
+                const nextInput = input.nextElementSibling;
+                if (nextInput && nextInput.classList.contains('otp-box')) {
+                    setTimeout(() => {
+                        nextInput.focus();
+                        nextInput.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            nextInput.style.transform = 'scale(1)';
+                        }, 200);
+                    }, 100);
+                }
+            }
+        }
+
+        function verifyOTP() {
+            const boxes = document.querySelectorAll('.otp-box');
+            let enteredCode = "";
+            boxes.forEach(box => enteredCode += box.value);
+
+            if(enteredCode === "1234" || enteredCode === "0000") {
+                // Enhanced success animation
+                const successOverlay = document.getElementById('successScreen');
+                successOverlay.classList.add('active');
+
+                // Add confetti effect
+                createConfetti();
+
+                const userPhone = document.getElementById('phoneNum').value;
+                localStorage.setItem('agriUserPhone', userPhone ? '+91 ' + userPhone : 'Guest_Farmer');
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                // Enhanced error feedback
+                const container = document.querySelector('.otp-container');
+                container.style.animation = 'shake 0.6s ease-in-out';
+
+                // Add error styling to boxes
+                boxes.forEach(box => {
+                    box.style.borderColor = '#dc2626';
+                    box.style.boxShadow = '0 0 0 3px rgba(220, 38, 38, 0.1)';
+                });
+
+                setTimeout(() => {
+                    container.style.animation = '';
+                    boxes.forEach(box => {
+                        box.style.borderColor = '';
+                        box.style.boxShadow = '';
+                        box.value = "";
+                        box.classList.remove('filled');
+                    });
+                    boxes[0].focus();
+                }, 600);
+
+                // Show error message
+                const errorMsg = document.createElement('div');
+                errorMsg.textContent = 'Incorrect OTP. Please try again or request a new code.';
+                errorMsg.style.cssText = `
+                    color: #dc2626;
+                    font-size: 0.9rem;
+                    text-align: center;
+                    margin-top: 1rem;
+                    font-weight: 500;
+                    animation: fadeIn 0.3s ease;
+                `;
+                document.getElementById('stepOTP').appendChild(errorMsg);
+                setTimeout(() => errorMsg.remove(), 4000);
+            }
+        }
+
+        // Enhanced confetti effect
+        function createConfetti() {
+            const colors = ['#16a34a', '#22c55e', '#84cc16', '#10b981', '#059669'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    top: -10px;
+                    left: ${Math.random() * 100}%;
+                    z-index: 1000;
+                    animation: confettiFall ${1 + Math.random() * 2}s linear forwards;
+                    transform: rotate(${Math.random() * 360}deg);
+                `;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Add confetti animation
+        const confettiStyle = document.createElement('style');
+        confettiStyle.textContent = `
+            @keyframes confettiFall {
+                to {
+                    transform: translateY(100vh) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(confettiStyle);
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const activeStep = document.getElementById('stepPhone').style.display !== 'none' ? 'phone' : 'otp';
+                if (activeStep === 'phone') {
+                    requestOTP();
+                } else {
+                    verifyOTP();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Disease Diagnostics</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+        }
+
+        .diagnostics-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .diagnostics-hero {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #dc2626 100%);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(220, 38, 38, 0.2);
+        }
+
+        .diagnostics-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #fef2f2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Main Diagnostics Section */
+        .diagnostics-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .upload-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .upload-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtitle {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .upload-area {
+            border: 3px dashed #d1d5db;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: #16a34a;
+            background: #f0fdf4;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #9ca3af;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .upload-area:hover .upload-icon {
+            color: #16a34a;
+        }
+
+        .upload-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-preview {
+            display: none;
+            margin-bottom: 2rem;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .scan-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .scan-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .scan-btn:hover::before {
+            left: 100%;
+        }
+
+        .scan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+        }
+
+        .scan-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .scan-btn.scanning {
+            pointer-events: none;
+        }
+
+        .scan-btn.scanning::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin-top: 2rem;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-left: 4px solid #dc2626;
+            display: none;
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .results-icon {
+            font-size: 2rem;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #dc2626;
+            margin: 0;
+        }
+
+        .results-subtitle {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .results-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .result-item {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            font-size: 1rem;
+            color: #111827;
+            line-height: 1.5;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .severity-high {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .severity-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .severity-low {
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .whatsapp-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+        }
+
+        /* WhatsApp Modal */
+        .wa-modal {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 380px;
+            height: 500px;
+            background: #efeae2;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 2000;
+            border: 1px solid #ddd;
+            animation: slideInUp 0.4s ease-out;
+        }
+
+        .wa-header {
+            background: #008069;
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        .wa-header-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .wa-avatar {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #008069;
+            font-size: 1.25rem;
+        }
+
+        .wa-name {
+            font-size: 1rem;
+        }
+
+        .wa-status {
+            font-size: 0.75rem;
+            color: #d9fdd3;
+        }
+
+        .wa-close {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0;
+        }
+
+        .wa-body {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+            overflow-y: auto;
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+            background-size: cover;
+        }
+
+        .wa-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            font-family: Helvetica, Arial, sans-serif;
+            line-height: 1.4;
+        }
+
+        .wa-bubble.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .wa-bubble.in {
+            background: #ffffff;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .wa-bubble.out {
+            background: #d9fdd3;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .wa-time {
+            font-size: 0.65rem;
+            color: #667781;
+            display: block;
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+
+        /* Animations */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .diagnostics-container {
+                padding: 1rem;
+            }
+
+            .diagnostics-hero {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .diagnostics-main {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .wa-modal {
+                width: 90%;
+                max-width: 380px;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="diagnostics-container">
+        <!-- Hero Section -->
+        <div class="diagnostics-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">🔬 Disease Diagnostics</h1>
+                <p class="hero-subtitle">
+                    Advanced computer vision analysis to detect plant diseases early and provide treatment recommendations with voice assistance.
+                </p>
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">👁️</span>
+                        <span class="feature-text">AI Vision Analysis</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🔊</span>
+                        <span class="feature-text">Voice Output</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💬</span>
+                        <span class="feature-text">WhatsApp Integration</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Diagnostics Section -->
+        <div class="diagnostics-main">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div class="upload-header">
+                    <h2 class="upload-title">Plant Sample Analysis</h2>
+                    <p class="upload-subtitle">
+                        Upload a clear image of your plant leaves or stems for instant AI-powered disease detection and treatment recommendations.
+                    </p>
+                </div>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Click to upload or drag & drop</div>
+                    <div class="upload-subtext">Supports JPG, PNG images up to 10MB</div>
+                    <input type="file" class="file-input" id="imageUpload" accept="image/*">
+                </div>
+
+                <div class="file-preview" id="filePreview">
+                    <img class="preview-image" id="previewImage" alt="Plant sample preview">
+                </div>
+
+                <button class="scan-btn" id="scanBtn" onclick="runScanAnimation()">
+                    <span>🔬</span>
+                    Run Diagnostic Scan
+                </button>
+
+                <div class="progress-section">
+                    <div class="progress-container" id="progContainer">
+                        <div class="progress-bar" id="progBar"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Initializing AI analysis...</div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="scanResult">
+                <div class="results-header">
+                    <span class="results-icon">⚠️</span>
+                    <div>
+                        <h3 class="results-title">Pathogen Detected</h3>
+                        <p class="results-subtitle">🔊 Audio analysis playing</p>
+                    </div>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-label">Identified Condition</div>
+                        <div class="result-value" id="disName">---</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Severity Level</div>
+                        <span class="severity-badge" id="disSev">---</span>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Recommended Treatment</div>
+                        <div class="result-value" id="disTreat">---</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Preventative Measures</div>
+                        <div class="result-value" id="disPrev">---</div>
+                    </div>
+                </div>
+
+                <button class="whatsapp-btn" onclick="sendToWhatsApp()">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.031 0C5.383 0 0 5.383 0 12.031c0 2.128.553 4.2 1.603 6.04L.015 24l6.092-1.597C7.94 23.454 9.975 24 12.031 24 18.68 24 24 18.68 24 12.031S18.68 0 12.031 0zm3.434 17.382c-.524 1.481-2.585 2.05-3.553 2.148-1.58.156-3.484-.523-5.918-2.957-2.433-2.434-3.113-4.338-2.957-5.918.098-.968.667-3.029 2.148-3.553.447-.159.948-.124 1.341.118.423.26.71.745.897 1.258.204.56.326 1.32.183 1.833-.146.523-.48 1.012-.873 1.325-.13.104-.265.234-.105.51.52.88 1.258 1.62 2.138 2.14.275.16.405.025.51-.105.312-.393.801-.727 1.324-.873.513-.143 1.273-.02 1.833.184.513.187.998.474 1.258.897.242.393.277.894.118 1.341z"/>
+                    </svg>
+                    Send Prescription to Farmer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Modal -->
+    <div id="waModal" class="wa-modal">
+        <div class="wa-header">
+            <div class="wa-header-info">
+                <div class="wa-avatar">🤖</div>
+                <div>
+                    <div class="wa-name">AgriSphere Bot</div>
+                    <div class="wa-status">online</div>
+                </div>
+            </div>
+            <button class="wa-close" onclick="closeWA()">✖</button>
+        </div>
+        <div class="wa-body" id="waChat"></div>
+    </div>
+
+    <script>
+        // File upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('imageUpload');
+        const filePreview = document.getElementById('filePreview');
+        const previewImage = document.getElementById('previewImage');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect();
+            }
+        });
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect() {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                    filePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function runScanAnimation() {
+            const fileInput = document.getElementById('imageUpload');
+            if(fileInput.files.length === 0) {
+                alert("Please select an image file to proceed.");
+                return;
+            }
+
+            document.getElementById('scanResult').style.display = 'none';
+            const btn = document.getElementById('scanBtn');
+            const progContainer = document.getElementById('progContainer');
+            const progBar = document.getElementById('progBar');
+            const progressText = document.getElementById('progressText');
+
+            btn.classList.add('scanning');
+            btn.innerHTML = "🔬 Analyzing Image...";
+            progContainer.style.display = "block";
+            progBar.style.width = "0%";
+
+            const progressSteps = [
+                "Initializing AI analysis...",
+                "Processing image pixels...",
+                "Running computer vision algorithms...",
+                "Analyzing disease patterns...",
+                "Generating diagnosis..."
+            ];
+
+            let progress = 0;
+            let stepIndex = 0;
+
+            const interval = setInterval(() => {
+                progress += 8;
+                if (progress >= 20 && stepIndex < progressSteps.length - 1) {
+                    stepIndex++;
+                    progressText.textContent = progressSteps[stepIndex];
+                }
+                if (progress > 90) {
+                    clearInterval(interval);
+                    progressText.textContent = "Finalizing results...";
+                }
+                progBar.style.width = progress + "%";
+            }, 200);
+
+            // Package the image and send to Python API
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch('http://localhost:5000/api/diagnose_disease', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if(data.error) throw new Error(data.error);
+
+                // Populate Python results into UI
+                document.getElementById('disName').innerText = data.disease;
+                document.getElementById('disSev').innerText = data.severity;
+                document.getElementById('disSev').className = 'severity-badge severity-' + data.severity.toLowerCase();
+                document.getElementById('disTreat').innerText = data.treatment;
+                document.getElementById('disPrev').innerText = data.prevention;
+
+                progBar.style.width = "100%";
+                progressText.textContent = "Analysis complete!";
+                setTimeout(() => {
+                    document.getElementById('scanResult').style.display = 'block';
+                }, 400);
+
+                // Voice Output Audio
+                const ttsMessage = new SpeechSynthesisUtterance(`Warning. ${data.disease} detected. Severity level ${data.severity}. Recommended treatment: ${data.treatment}`);
+                window.speechSynthesis.speak(ttsMessage);
+
+            } catch (error) {
+                console.error(error);
+                alert("AI Engine Offline. Ensure your Python Flask server (app.py) is running on port 5000.");
+            } finally {
+                clearInterval(interval);
+                btn.classList.remove('scanning');
+                btn.innerHTML = "<span>🔬</span> Run New Scan";
+                setTimeout(() => {
+                    progContainer.style.display = "none";
+                }, 1000);
+            }
+        }
+
+        // WhatsApp Animation Logic
+        function sendToWhatsApp() {
+            const modal = document.getElementById('waModal');
+            const chat = document.getElementById('waChat');
+            modal.style.display = 'flex';
+            chat.innerHTML = '';
+
+            const disName = document.getElementById('disName').innerText;
+            const treat = document.getElementById('disTreat').innerText;
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const messages = [
+                { text: "System initiated push notification to registered farmer mobile number...", type: "out", delay: 500 },
+                { text: `⚠️ *AgriSphere Alert:*\n${disName} detected in your field analysis.`, type: "in", delay: 1800 },
+                { text: `💊 *Prescription:*\n${treat}`, type: "in", delay: 3500 },
+                { text: "🔗 Tap here to order this treatment directly from the Local Marketplace.", type: "in", delay: 5000 }
+            ];
+
+            messages.forEach(msg => {
+                setTimeout(() => {
+                    const bubble = document.createElement('div');
+                    bubble.className = `wa-bubble ${msg.type}`;
+                    bubble.innerHTML = msg.text.replace(/\n/g, '<br>') + `<span class="wa-time">${time}</span>`;
+                    chat.appendChild(bubble);
+                    void bubble.offsetWidth;
+                    bubble.classList.add('show');
+                    chat.scrollTop = chat.scrollHeight;
+                }, msg.delay);
+            });
+        }
+
+        function closeWA() {
+            document.getElementById('waModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

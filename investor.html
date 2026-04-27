@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSphere Contributor Portal</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-main);
+            color: var(--text-primary);
+        }
+
+        .portal-shell {
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .portal-hero {
+            background: var(--bg-surface);
+            border-radius: 28px;
+            padding: 2rem;
+            box-shadow: 0 20px 45px rgba(17, 24, 39, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.12);
+        }
+
+        .portal-hero h1 {
+            margin: 0;
+            font-size: 2.6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .portal-hero p {
+            margin: 1rem 0 0;
+            color: #475569;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .portal-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.8rem;
+            border: 1px solid rgba(22, 163, 74, 0.12);
+            box-shadow: 0 18px 40px rgba(17, 24, 39, 0.06);
+        }
+
+        .portal-card h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .portal-card p {
+            color: #475569;
+            line-height: 1.75;
+        }
+
+        .portal-card ul {
+            margin: 1rem 0 0;
+            padding-left: 1.25rem;
+            color: #334155;
+            line-height: 1.8;
+        }
+
+        .portal-form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .portal-form label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #0f172a;
+        }
+
+        .portal-form input,
+        .portal-form select {
+            width: 100%;
+            padding: 1rem 1rem;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            color: #0f172a;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .portal-form input:focus,
+        .portal-form select:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+        }
+
+        .portal-form .summary {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-card {
+            background: #ecfdf5;
+            border: 1px solid rgba(22, 163, 74, 0.16);
+            border-radius: 18px;
+            padding: 1.25rem;
+            color: #0f172a;
+        }
+
+        .summary-card strong {
+            display: block;
+            font-size: 1.35rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .portal-button {
+            border: none;
+            color: white;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .portal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(22, 163, 74, 0.2);
+        }
+
+        .portal-notice {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            border-radius: 18px;
+            background: #f0fdf4;
+            border: 1px solid rgba(16, 185, 129, 0.16);
+            color: #14532d;
+            font-weight: 600;
+        }
+
+        .portal-footer {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .portal-footer h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #111827;
+        }
+
+        .portal-footer p {
+            margin: 0;
+            color: #475569;
+        }
+
+        @media (max-width: 900px) {
+            .portal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .portal-shell {
+                padding: 1.25rem;
+            }
+
+            .portal-hero h1 {
+                font-size: 2rem;
+            }
+
+            .portal-card {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-shell">
+        <div class="portal-hero">
+            <h1>Investor Funding Portal</h1>
+            <p>Support AgriSphere’s farmer loan pool with secure investor capital. Funds are deployed to qualified farmers as working capital loans, generating sustainable returns while nurturing rural growth.</p>
+        </div>
+
+        <div class="portal-grid">
+            <div class="portal-card">
+                <h2>How it works</h2>
+                <p>Investor capital is aggregated into a pooled lending fund. AgriSphere distributes loans to farmers, manages repayments, and returns fixed interest to contributors.</p>
+                <ul>
+                    <li>Invest capital into the AgriSphere fund.</li>
+                    <li>We convert it to farmer micro-loans at 3-4% APR.</li>
+                    <li>Loan repayments are tracked and returned securely.</li>
+                    <li>These come under SOP you contribute at your own risk</li>
+                </ul>
+                <div class="portal-notice">🔒 Trusted process • Transparent returns • Impact driven</div>
+            </div>
+
+            <div class="portal-card">
+                <form class="portal-form" id="investorForm">
+                    <label for="investorName">Investor Name</label>
+                    <input id="investorName" type="text" placeholder="Enter your name" value="AgriSphere Partner" />
+
+                    <label for="investAmount">Fund Amount (₹)</label>
+                    <input id="investAmount" type="number" min="1000" step="1000" value="100000" />
+
+                    <label for="investmentTerm">Loan Term</label>
+                    <select id="investmentTerm">
+                        <option value="6">6 months</option>
+                        <option value="12" selected>12 months</option>
+                        <option value="18">18 months</option>
+                    </select>
+
+                    <div class="summary">
+                        <div class="summary-card">
+                            <strong id="returnRate">3-4%</strong>
+                            Target Interest Rate
+                        </div>
+                        <div class="summary-card">
+                            <strong id="projectedReturn">₹108,000</strong>
+                            Estimated Balance
+                        </div>
+                    </div>
+
+                    <button type="button" class="portal-button" onclick="simulateInvestment()">Fund Now</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="portal-footer">
+            <div class="portal-card">
+                <h3>Investment Summary</h3>
+                <p id="investmentSummary">Enter your fund amount and term above to preview how investment capital grows through AgriSphere’s loan pool.</p>
+            </div>
+            <div class="portal-card">
+                <h3>Active Investor Metrics</h3>
+                <p>New investor contributions are automatically matched to farmer loan requests. This helps maintain liquidity and ensures funds are recycled efficiently into the next crop cycle.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const rate = 0.08;
+        const investAmountInput = document.getElementById('investAmount');
+        const investmentTerm = document.getElementById('investmentTerm');
+        const projectedReturn = document.getElementById('projectedReturn');
+        const investmentSummary = document.getElementById('investmentSummary');
+
+        function updateSummary() {
+            const principal = Number(investAmountInput.value) || 0;
+            const termMonths = Number(investmentTerm.value);
+            const interest = principal * rate * (termMonths / 12);
+            const balance = Math.round(principal + interest);
+            projectedReturn.textContent = `₹${balance.toLocaleString('en-IN')}`;
+            investmentSummary.textContent = `A ₹${principal.toLocaleString('en-IN')} investment over ${termMonths} months is projected to return ₹${balance.toLocaleString('en-IN')} at ${rate * 100}% APR.`;
+        }
+
+        function simulateInvestment() {
+            const investorName = document.getElementById('investorName').value.trim() || 'Partner';
+            const amount = Number(investAmountInput.value);
+            const term = Number(investmentTerm.value);
+            if (!amount || amount < 1000) {
+                alert('Please enter a valid amount of at least ₹1,000.');
+                return;
+            }
+            const balance = Math.round(amount + amount * rate * (term / 12));
+            alert(`✅ Thank you, ${investorName}!\n\nYour ₹${amount.toLocaleString('en-IN')} contribution is ready to support AgriSphere loans.\nEstimated return after ${term} months: ₹${balance.toLocaleString('en-IN')}.`);
+        }
+
+        investAmountInput.addEventListener('input', updateSummary);
+        investmentTerm.addEventListener('change', updateSummary);
+        updateSummary();
+    </script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSphere Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#16a34a">
+</head>
+<body>
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>Loading AgriSphere</h2>
+            <p>Initializing platform...</p>
+        </div>
+    </div>
+
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="brand">🌾 <span id="txt-logo">AgriSphere</span></div>
+            <div class="nav-menu" style="overflow-y: auto; height: 100%; padding-bottom: 20px;">
+                
+                <p style="padding: 10px 24px; font-size: 0.75rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase;">Core Intelligence</p>
+                <a href="dashboard.html" target="content_frame" class="nav-link" id="nav-dash">Dashboard</a>
+                
+                <p style="padding: 10px 24px; font-size: 0.75rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin-top: 10px;">Learning Center</p>
+                <a href="education.html" target="content_frame" class="nav-link" id="nav-edu" style="color: var(--primary-color); font-weight: bold; background: rgba(22, 163, 74, 0.1); border-left: 3px solid var(--primary-color);">🎓 Farmer Academy</a>
+                
+                <a href="predictor.html" target="content_frame" class="nav-link" id="nav-pred">Crop & Market AI</a>
+                <a href="disease.html" target="content_frame" class="nav-link" id="nav-diag">Disease Diagnostics</a>
+                <a href="weather.html" target="content_frame" class="nav-link" id="nav-weath">Climate & Weather</a>
+                <a href="iot.html" target="content_frame" class="nav-link" id="nav-iot">📡 IoT Hardware Sync</a>
+                
+                <p style="padding: 10px 24px; font-size: 0.75rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin-top: 10px;">FinTech & Govt</p>
+                <a href="schemes.html" target="content_frame" class="nav-link" id="nav-scheme">🏛️ Govt Schemes Matcher</a>
+                <a href="ledger.html" target="content_frame" class="nav-link" id="nav-ledger">📈 Smart Farm Ledger</a>
+                <a href="funding.html" target="content_frame" class="nav-link" id="nav-fund">Farmer Funding</a>
+                
+                <p style="padding: 10px 24px; font-size: 0.75rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin-top: 10px;">Agri-Business</p>
+                <a href="market.html" target="content_frame" class="nav-link" id="nav-mark">Marketplace</a>
+                <a href="contracts.html" target="content_frame" class="nav-link" id="nav-cont">🤝 Corporate Contracts</a>
+                <a href="trace.html" target="content_frame" class="nav-link" id="nav-trace">🔗 Crop Traceability</a>
+                
+                <p style="padding: 10px 24px; font-size: 0.75rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin-top: 10px;">Advanced</p>
+                <a href="terrain.html" target="content_frame" class="nav-link" id="nav-terr">🌍 3D Terrain Analysis</a>
+                <a href="map.html" target="content_frame" class="nav-link" id="nav-map">🛰️ Satellite Mapping</a>
+                <a href="chat.html" target="content_frame" class="nav-link" id="nav-chat">💬 Krishi Mitra Chat</a>
+                <a href="admin.html" target="content_frame" class="nav-link" id="nav-admin">🏆 Admin Leaderboard</a>
+            </div>
+        </nav>
+
+        <div class="main-wrapper">
+            <header class="top-header">
+                <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="header-controls">
+                    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <div class="lang-toggle">
+                        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+                        <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">HI</button>
+                    </div>
+                </div>
+            </header>
+            <iframe src="dashboard.html" name="content_frame" title="Main Content"></iframe>
+        </div>
+    </div>
+
+    <button class="voice-fab" id="voiceBtn" onclick="triggerVoiceAI()">🎤</button>
+    <div class="voice-output" id="voiceOutput">
+        <strong style="color: var(--primary-color);">AI Assistant:</strong>
+        <p id="voiceText" style="margin-top: 5px;">Listening...</p>
+    </div>
+
+    <div id="liveToast" class="toast">
+        <span style="font-size: 1.2rem;">🔔</span>
+        <p id="toastMsg" style="font-weight: 500; font-size: 0.9rem;">System online.</p>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA ServiceWorker registration failed: ', err));
+            });
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const hamburger = document.getElementById('hamburger');
+            sidebar.classList.toggle('open');
+            hamburger.classList.toggle('open');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            const sidebar = document.querySelector('.sidebar');
+            const hamburger = document.getElementById('hamburger');
+            if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('open');
+            }
+        });
+
+        // Highlight active navigation
+        function setActiveNav(href) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = document.querySelector(`a[href="${href}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Set initial active nav
+        setActiveNav('dashboard.html');
+
+        // Listen for iframe navigation
+        const iframe = document.querySelector('iframe');
+        iframe.addEventListener('load', () => {
+            const currentSrc = iframe.contentWindow.location.pathname.split('/').pop() || 'dashboard.html';
+            setActiveNav(currentSrc);
+        });
+
+        const dictionary = {
+            'en': { 
+                logo: "AgriSphere", dash: "Dashboard", weath: "Climate & Weather", 
+                pred: "Crop & Market AI", diag: "Disease Diagnostics", map: "🛰️ Satellite Mapping", 
+                mark: "Marketplace", cont: "🤝 Corporate Contracts", fund: "Farmer Funding",
+                terr: "🌍 3D Terrain Analysis", chat: "💬 Krishi Mitra Chat", admin: "🏆 Admin Leaderboard",
+                scheme: "🏛️ Govt Schemes Matcher", ledger: "📈 Smart Farm Ledger", trace: "🔗 Crop Traceability", 
+                iot: "📡 IoT Hardware Sync", edu: "🎓 Farmer Academy"
+            },
+            'hi': { 
+                logo: "एग्री-स्फीयर", dash: "डैशबोर्ड", weath: "जलवायु और मौसम", 
+                pred: "फसल और बाजार एआई", diag: "रोग निदान", map: "🛰️ सैटेलाइट मैपिंग", 
+                mark: "उपकरण बाज़ार", cont: "🤝 कॉर्पोरेट अनुबंध", fund: "किसान फंडिंग",
+                terr: "🌍 3D भू-भाग विश्लेषण", chat: "💬 कृषि मित्र चैट", admin: "🏆 एडमिन लीडरबोर्ड",
+                scheme: "🏛️ सरकारी योजनाएं", ledger: "📈 स्मार्ट फार्म लेजर", trace: "🔗 फसल ट्रेसबिलिटी", 
+                iot: "📡 IoT हार्डवेयर सिंक", edu: "🎓 किसान अकादमी"
+            }
+        };
+
+        function setLang(lang) {
+            document.getElementById('btn-en').classList.remove('active');
+            document.getElementById('btn-hi').classList.remove('active');
+            document.getElementById('btn-' + lang).classList.add('active');
+
+            document.getElementById('txt-logo').innerText = dictionary[lang].logo;
+            document.getElementById('nav-dash').innerText = dictionary[lang].dash;
+            document.getElementById('nav-weath').innerText = dictionary[lang].weath;
+            document.getElementById('nav-pred').innerText = dictionary[lang].pred;
+            document.getElementById('nav-diag').innerText = dictionary[lang].diag;
+            document.getElementById('nav-map').innerText = dictionary[lang].map;
+            document.getElementById('nav-mark').innerText = dictionary[lang].mark;
+            document.getElementById('nav-cont').innerText = dictionary[lang].cont;
+            document.getElementById('nav-fund').innerText = dictionary[lang].fund;
+            document.getElementById('nav-terr').innerText = dictionary[lang].terr;
+            document.getElementById('nav-chat').innerText = dictionary[lang].chat;
+            document.getElementById('nav-admin').innerText = dictionary[lang].admin;
+            document.getElementById('nav-scheme').innerText = dictionary[lang].scheme;
+            document.getElementById('nav-ledger').innerText = dictionary[lang].ledger;
+            document.getElementById('nav-trace').innerText = dictionary[lang].trace;
+            document.getElementById('nav-iot').innerText = dictionary[lang].iot;
+            document.getElementById('nav-edu').innerText = dictionary[lang].edu;
+            
+            showToast(lang === 'hi' ? "भाषा हिंदी में बदल दी गई है।" : "Language set to English.");
+        }
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+            const isDark = body.classList.contains('dark-theme');
+            
+            if (isDark) {
+                body.classList.remove('dark-theme');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+                showToast('Switched to Light Mode');
+            } else {
+                body.classList.add('dark-theme');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+                showToast('Switched to Dark Mode');
+            }
+        }
+
+        // Initialize theme on page load
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.querySelector('.theme-icon');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeIcon.textContent = '☀️';
+            } else {
+                document.body.classList.remove('dark-theme');
+                themeIcon.textContent = '🌙';
+            }
+        }
+
+        // Call initTheme when page loads
+        window.addEventListener('load', initTheme);
+
+        const alerts = [
+            "📡 Ground Sensor 48A successfully synced.",
+            "🏛️ New PM-KISAN guidelines uploaded.",
+            "🤝 ITC just posted a new Wheat Contract.",
+            "🔗 Block 482A verified on the Traceability Ledger."
+        ];
+
+        function showToast(customMsg = null) {
+            const toast = document.getElementById('liveToast');
+            const msg = document.getElementById('toastMsg');
+            msg.innerText = customMsg || alerts[Math.floor(Math.random() * alerts.length)];
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 4000);
+        }
+        setInterval(() => showToast(), 15000); 
+
+        function triggerVoiceAI() {
+            const btn = document.getElementById('voiceBtn');
+            const output = document.getElementById('voiceOutput');
+            const text = document.getElementById('voiceText');
+
+            if(btn.classList.contains('listening')) return;
+            btn.classList.add('listening');
+            output.style.display = 'block';
+            text.innerHTML = "Listening... <em>(Try speaking in Hindi)</em>";
+
+            setTimeout(() => {
+                text.innerHTML = "<strong>You:</strong> 'Mujhe agle mausam mein kya ugana chahiye?'<br><br>⏳ Processing AI models...";
+                setTimeout(() => {
+                    btn.classList.remove('listening');
+                    text.innerHTML = "<strong>AI:</strong> Mitti aur bazaar ke hisaab se, aapko <strong>Soybean</strong> ugana chahiye. Demand bahut high hai.";
+                    setTimeout(() => { output.style.display = 'none'; }, 6000);
+                    
+                    const utterance = new SpeechSynthesisUtterance("According to soil and market trends, you should plant Soybean. Demand is very high.");
+                    window.speechSynthesis.speak(utterance);
+                }, 2500);
+            }, 2500);
+        }
+
+        // Dynamic background effect
+        // Removed for professional appearance
+
+        // Remove loading overlay
+        setTimeout(() => {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.classList.add('fade-out');
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 500);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

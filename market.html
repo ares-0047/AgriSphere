@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSphere - P2P Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Enhanced header with marketplace theme */
+        .page-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #16a34a, #22c55e, #16a34a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #4b5563;
+            font-weight: 500;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .add-listing-btn {
+            background: linear-gradient(135deg, #111827, #374151);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .add-listing-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Enhanced filter section */
+        .filter-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+        }
+
+        .filter-bar {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .search-input {
+            position: relative;
+        }
+
+        .search-input input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input input:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            outline: none;
+        }
+
+        .search-input::before {
+            content: '🔍';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 1.2rem;
+        }
+
+        .filter-select {
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            outline: none;
+        }
+
+        .sort-select {
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-select:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            outline: none;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .toggle-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .toggle-btn.active {
+            background: #16a34a;
+            color: white;
+            border-color: #16a34a;
+        }
+
+        /* Enhanced marketplace grid */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .item-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            position: relative;
+        }
+
+        .item-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(22, 163, 74, 0.2);
+        }
+
+        .item-card.unavailable {
+            opacity: 0.7;
+            filter: grayscale(0.3);
+        }
+
+        .item-card.unavailable::before {
+            content: 'RENTED OUT';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ef4444;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+
+        .item-header {
+            padding: 2rem 2rem 1rem;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-bottom: 1px solid rgba(22, 163, 74, 0.1);
+            position: relative;
+        }
+
+        .item-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
+        }
+
+        .item-category {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .item-category.equipment {
+            background: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+        }
+
+        .item-category.land {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+
+        .item-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .item-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #16a34a;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .item-content {
+            padding: 1.5rem 2rem;
+        }
+
+        .item-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .contact-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .contact-btn:hover::before {
+            left: 100%;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3);
+        }
+
+        .contact-btn.unavailable {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .contact-btn.unavailable:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .favorite-btn {
+            padding: 1rem;
+            background: rgba(22, 163, 74, 0.1);
+            color: #16a34a;
+            border: 2px solid rgba(22, 163, 74, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .favorite-btn:hover {
+            background: #16a34a;
+            color: white;
+            border-color: #16a34a;
+        }
+
+        .favorite-btn.favorited {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6b7280;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+
+        /* Stats section */
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #16a34a;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .market-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+
+            .filter-bar {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+                padding: 2rem 1rem;
+            }
+
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .market-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .item-actions {
+                flex-direction: column;
+            }
+
+            .contact-btn,
+            .favorite-btn {
+                width: 100%;
+            }
+
+            .market-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .market-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .view-toggle {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .toggle-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Enhanced header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1>🏪 AgriMarket</h1>
+                <p class="subtitle">Connect directly with farmers to rent equipment or lease land. Build community, cut costs, maximize efficiency.</p>
+            </div>
+            <button class="add-listing-btn" onclick="showAddListingModal()">
+                ➕ List Your Asset
+            </button>
+        </div>
+
+        <!-- Market statistics -->
+        <div class="market-stats">
+            <div class="stat-card">
+                <span class="stat-value" id="totalListings">0</span>
+                <span class="stat-label">Active Listings</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="availableItems">0</span>
+                <span class="stat-label">Available Now</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="equipmentCount">0</span>
+                <span class="stat-label">Equipment</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="landCount">0</span>
+                <span class="stat-label">Land Parcels</span>
+            </div>
+        </div>
+
+        <!-- Enhanced filter section -->
+        <div class="filter-section">
+            <div class="filter-bar">
+                <div class="search-input">
+                    <input type="text" id="searchInput" placeholder="Search tractors, land, equipment..." onkeyup="renderMarket()">
+                </div>
+                <select id="typeFilter" class="filter-select" onchange="renderMarket()">
+                    <option value="ALL">All Categories</option>
+                    <option value="Equipment">🚜 Equipment</option>
+                    <option value="Land">🌾 Land</option>
+                </select>
+                <select id="sortFilter" class="sort-select" onchange="renderMarket()">
+                    <option value="default">Sort by: Default</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name: A to Z</option>
+                </select>
+                <div class="view-toggle">
+                    <button class="toggle-btn active" onclick="setView('grid')">⊞ Grid</button>
+                    <button class="toggle-btn" onclick="setView('list')">☰ List</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketplace grid -->
+        <div class="market-grid" id="marketGrid">
+            <!-- Items will be rendered here -->
+        </div>
+    </div>
+
+    <script>
+        // Enhanced mock database for the marketplace
+        const marketItems = [
+            { id: 1, type: "Equipment", name: "Mahindra 575 DI Tractor", icon: "🚜", price: "₹800", unit: "hour", owner: "Rajesh Kumar", location: "Ludhiana, Punjab", available: true, rating: 4.8, reviews: 24, description: "Powerful 47HP tractor perfect for plowing and transportation" },
+            { id: 2, type: "Land", name: "2 Acres Irrigated Land", icon: "🌾", price: "₹15,000", unit: "month", owner: "Anita Desai", location: "Pune, Maharashtra", available: true, rating: 4.9, reviews: 18, description: "Fertile irrigated land with well water access" },
+            { id: 3, type: "Equipment", name: "Heavy Duty Rotavator", icon: "⚙️", price: "₹300", unit: "hour", owner: "Vikram Singh", location: "Bhopal, MP", available: true, rating: 4.6, reviews: 31, description: "Professional rotavator for soil preparation" },
+            { id: 4, type: "Equipment", name: "Solar Water Pump (5HP)", icon: "💧", price: "₹500", unit: "day", owner: "Suresh Patel", location: "Surat, Gujarat", available: false, rating: 4.7, reviews: 15, description: "Eco-friendly solar powered irrigation pump" },
+            { id: 5, type: "Land", name: "0.5 Acre Greenhouse Space", icon: "⛺", price: "₹8,000", unit: "month", owner: "Priya Sharma", location: "Karnal, Haryana", available: true, rating: 4.5, reviews: 22, description: "Climate-controlled greenhouse for high-value crops" },
+            { id: 6, type: "Equipment", name: "Combine Harvester", icon: "🌾", price: "₹2,000", unit: "hour", owner: "Gopal Reddy", location: "Guntur, AP", available: true, rating: 4.9, reviews: 28, description: "Modern combine harvester for efficient harvesting" },
+            { id: 7, type: "Equipment", name: "Diesel Generator (15KVA)", icon: "⚡", price: "₹400", unit: "day", owner: "Mohan Lal", location: "Jaipur, Rajasthan", available: true, rating: 4.4, reviews: 19, description: "Reliable backup power for farm operations" },
+            { id: 8, type: "Land", name: "3 Acres Organic Farm", icon: "🌱", price: "₹25,000", unit: "month", owner: "Kavita Joshi", location: "Nashik, Maharashtra", available: true, rating: 5.0, reviews: 12, description: "Certified organic farmland with natural irrigation" }
+        ];
+
+        let currentView = 'grid';
+        let favorites = JSON.parse(localStorage.getItem('marketFavorites') || '[]');
+
+        function updateStats() {
+            const totalListings = marketItems.length;
+            const availableItems = marketItems.filter(item => item.available).length;
+            const equipmentCount = marketItems.filter(item => item.type === 'Equipment').length;
+            const landCount = marketItems.filter(item => item.type === 'Land').length;
+
+            document.getElementById('totalListings').textContent = totalListings;
+            document.getElementById('availableItems').textContent = availableItems;
+            document.getElementById('equipmentCount').textContent = equipmentCount;
+            document.getElementById('landCount').textContent = landCount;
+        }
+
+        function renderMarket() {
+            const grid = document.getElementById('marketGrid');
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            const sortFilter = document.getElementById('sortFilter').value;
+
+            let filteredItems = marketItems.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchText) ||
+                                    item.location.toLowerCase().includes(searchText) ||
+                                    item.owner.toLowerCase().includes(searchText);
+                const matchesType = typeFilter === "ALL" || item.type === typeFilter;
+                return matchesSearch && matchesType;
+            });
+
+            // Apply sorting
+            switch (sortFilter) {
+                case 'price-low':
+                    filteredItems.sort((a, b) => parseFloat(a.price.replace('₹', '').replace(',', '')) - parseFloat(b.price.replace('₹', '').replace(',', '')));
+                    break;
+                case 'price-high':
+                    filteredItems.sort((a, b) => parseFloat(b.price.replace('₹', '').replace(',', '')) - parseFloat(a.price.replace('₹', '').replace(',', '')));
+                    break;
+                case 'name':
+                    filteredItems.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                default:
+                    // Keep original order
+                    break;
+            }
+
+            grid.innerHTML = '';
+
+            if (filteredItems.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>🔍 No listings found</h3>
+                        <p>No items match your current search and filter criteria.</p>
+                        <button onclick="clearFilters()" class="contact-btn" style="margin-top: 1rem;">Clear Filters</button>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredItems.forEach((item, index) => {
+                const isFavorited = favorites.includes(item.id);
+                const cardClass = item.available ? 'item-card' : 'item-card unavailable';
+
+                const card = document.createElement('div');
+                card.className = cardClass;
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-icon">${item.icon}</div>
+                        <span class="item-category ${item.type.toLowerCase()}">${item.type}</span>
+                        <div class="item-title">${item.name}</div>
+                        <div class="item-price">₹${item.price} <span style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">/ ${item.unit}</span></div>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-details">
+                            <div class="detail-row">
+                                <span>👤</span>
+                                <span>${item.owner}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>📍</span>
+                                <span>${item.location}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>⭐</span>
+                                <span>${item.rating} (${item.reviews} reviews)</span>
+                            </div>
+                            <div class="detail-row" style="margin-top: 0.5rem; color: #4b5563; font-style: italic;">
+                                "${item.description}"
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="contact-btn ${item.available ? '' : 'unavailable'}" onclick="${item.available ? `bookItem(${item.id})` : ''}">
+                                ${item.available ? '📞 Contact & Book' : '🚫 Currently Rented'}
+                            </button>
+                            <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" onclick="toggleFavorite(${item.id})">
+                                ${isFavorited ? '❤️' : '🤍'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function setView(view) {
+            currentView = view;
+            const gridBtn = document.querySelector('.toggle-btn:nth-child(1)');
+            const listBtn = document.querySelector('.toggle-btn:nth-child(2)');
+            const grid = document.getElementById('marketGrid');
+
+            if (view === 'grid') {
+                gridBtn.classList.add('active');
+                listBtn.classList.remove('active');
+                grid.style.display = 'grid';
+            } else {
+                listBtn.classList.add('active');
+                gridBtn.classList.remove('active');
+                grid.style.display = 'block';
+                // List view would need additional styling - keeping grid for now
+                grid.style.display = 'grid';
+            }
+
+            renderMarket();
+        }
+
+        function bookItem(id) {
+            const item = marketItems.find(i => i.id === id);
+            if (item) {
+                // Show booking modal
+                const bookingDetails = `
+🌾 Booking Request for: ${item.name}
+
+👤 Owner: ${item.owner}
+📍 Location: ${item.location}
+💰 Price: ₹${item.price} per ${item.unit}
+⭐ Rating: ${item.rating}/5 (${item.reviews} reviews)
+
+📝 Description: ${item.description}
+
+Would you like to send a booking request to ${item.owner}?`;
+
+                if (confirm(bookingDetails)) {
+                    // Simulate booking process
+                    showNotification(`📤 Booking request sent to ${item.owner}! They'll contact you within 24 hours.`, 'success');
+
+                    // Mark as rented (in a real app, this would be handled by the backend)
+                    // item.available = false;
+                    // renderMarket();
+                }
+            }
+        }
+
+        function toggleFavorite(id) {
+            const index = favorites.indexOf(id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+                showNotification('Removed from favorites', 'info');
+            } else {
+                favorites.push(id);
+                showNotification('Added to favorites ❤️', 'success');
+            }
+
+            localStorage.setItem('marketFavorites', JSON.stringify(favorites));
+            renderMarket();
+        }
+
+        function showAddListingModal() {
+            const modalContent = `
+🏪 List Your Equipment or Land
+
+This feature allows farmers to:
+• List tractors, equipment, or land for rent
+• Set custom pricing and availability
+• Connect directly with other farmers
+• Earn additional income from assets
+
+Coming Soon! 🚀
+
+Would you like to be notified when this feature launches?`;
+
+            if (confirm(modalContent)) {
+                showNotification('✅ You\'ll be notified when listing features are available!', 'success');
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('typeFilter').value = 'ALL';
+            document.getElementById('sortFilter').value = 'default';
+            renderMarket();
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#16a34a' : type === 'error' ? '#ef4444' : '#6b7280'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                font-weight: 600;
+                animation: slideInRight 0.3s ease;
+                max-width: 400px;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Add notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        window.onload = function() {
+            updateStats();
+            renderMarket();
+        };
+    </script>
+
+            const filteredItems = marketItems.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchText) || item.location.toLowerCase().includes(searchText);
+                const matchesType = typeFilter === "ALL" || item.type === typeFilter;
+                return matchesSearch && matchesType;
+            });
+
+            if (filteredItems.length === 0) {
+                grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1 / -1;">No listings found matching your criteria.</p>`;
+                return;
+            }
+
+            filteredItems.forEach((item, index) => {
+                const btnClass = item.available ? 'btn-rent' : 'btn-rent rented';
+                const btnText = item.available ? 'Contact & Book' : 'Currently Rented';
+                const btnAction = item.available ? `onclick="bookItem(${item.id})"` : '';
+
+                const card = `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <div class="item-icon">${item.icon}</div>
+                            <span class="badge" style="background: ${item.type === 'Land' ? '#fef3c7' : '#e0e7ff'}; color: ${item.type === 'Land' ? '#92400e' : '#3730a3'};">${item.type}</span>
+                        </div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 4px; color: var(--text-primary);">${item.name}</h3>
+                        <p class="item-price">${item.price}</p>
+                        
+                        <div style="flex-grow: 1;"></div> <div class="item-owner">
+                            <span>👤 ${item.owner}</span> • <span>📍 ${item.location}</span>
+                        </div>
+                        <button class="${btnClass}" ${btnAction}>${btnText}</button>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        function bookItem(id) {
+            const item = marketItems.find(i => i.id === id);
+            if(confirm(`Send booking request for ${item.name} to ${item.owner}?`)) {
+                // Simulate booking
+                item.available = false;
+                alert(`Booking request sent! ${item.owner} will contact you shortly.`);
+                renderMarket(); // Re-render to show it as "Currently Rented"
+            }
+        }
+
+        // Initial render
+        window.onload = renderMarket;
+    </script>
+</body>
+</html>

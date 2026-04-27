@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSphere - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: var(--bg-main);
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-primary);
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #16a34a 100%);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(22, 163, 74, 0.2);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff, #f0fdf4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        /* Main Content Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Chart Cards */
+        .chart-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #16a34a, #22c55e, #16a34a);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chart-icon {
+            font-size: 1.25rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Activity Section */
+        .activity-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .activity-icon {
+            font-size: 1.25rem;
+        }
+
+        .view-all-btn {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(22, 163, 74, 0.3);
+        }
+
+        /* Activity Table */
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .activity-table th {
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .activity-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .farmer-name {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .farmer-location {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .crop-badge {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            color: #166534;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .funding-amount {
+            font-weight: 700;
+            color: #16a34a;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .hero-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .chart-card,
+            .activity-section {
+                padding: 1.5rem;
+            }
+
+            .activity-table th,
+            .activity-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Loading Animation */
+        .loading {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Dashboard Overview</h1>
+                <p class="hero-subtitle">Real-time network metrics and capital deployment analytics powering India's agricultural revolution.</p>
+
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <span class="stat-value" id="kpiFarmers">--</span>
+                        <span class="stat-label">Active Farmers</span>
+                        <div class="stat-trend">↑ 12% from last month</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="kpiCapital">--</span>
+                        <span class="stat-label">Capital Raised</span>
+                        <div class="stat-trend">₹34.34L total deployed</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="kpiFunded">--</span>
+                        <span class="stat-label">Funded Projects</span>
+                        <div class="stat-trend">86% success rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">2</span>
+                        <span class="stat-label">Weather Alerts</span>
+                        <div class="stat-trend">Punjab & Maharashtra</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Bar -->
+        <div class="quick-actions">
+            <div class="actions-header">
+                <h2 class="actions-title">
+                    <span>⚡</span>
+                    Quick Actions
+                </h2>
+            </div>
+            <div class="actions-grid">
+                <button class="action-btn" onclick="quickAction('funding')">
+                    <span class="action-icon">💰</span>
+                    Start New Funding Campaign
+                </button>
+                <button class="action-btn" onclick="quickAction('contract')">
+                    <span class="action-icon">🤝</span>
+                    Browse Corporate Contracts
+                </button>
+                <button class="action-btn" onclick="quickAction('market')">
+                    <span class="action-icon">🛒</span>
+                    Visit Equipment Market
+                </button>
+                <button class="action-btn" onclick="quickAction('weather')">
+                    <span class="action-icon">🌤️</span>
+                    Check Weather Forecast
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <h3 class="chart-title">
+                        <span class="chart-icon">📈</span>
+                        Capital Deployment Trends
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="fundingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Section -->
+            <div class="activity-section">
+                <div class="activity-header">
+                    <h3 class="activity-title">
+                        <span class="activity-icon">🌱</span>
+                        Recent Registrations
+                    </h3>
+                    <button class="view-all-btn">View All</button>
+                </div>
+
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Farmer</th>
+                            <th>Crop Focus</th>
+                            <th>Target</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentTable">
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Notifications Panel -->
+        <div class="notifications-panel">
+            <div class="notifications-header">
+                <h3 class="notifications-title">
+                    <span>🔔</span>
+                    System Notifications
+                </h3>
+            </div>
+            <div class="notification-list">
+                <div class="notification-item">
+                    <div class="notification-icon notification-weather">🌧️</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Heavy Rainfall Alert</div>
+                        <div class="notification-text">Heavy rainfall expected in Punjab & Maharashtra regions. Take preventive measures for crops.</div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-icon notification-success">✅</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Contract Update</div>
+                        <div class="notification-text">Lay's India has increased their potato contract price by 5%. Check contracts page for details.</div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-icon notification-success">🎯</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Funding Milestone</div>
+                        <div class="notification-text">Congratulations! 3 new farmers reached their funding goals this week.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crop Portfolio Chart -->
+        <div class="chart-card">
+            <h3 class="chart-title">
+                <span class="chart-icon">🥧</span>
+                Crop Demand Portfolio
+            </h3>
+            <div class="chart-container">
+                <canvas id="cropChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function buildDashboard() {
+            try {
+                const response = await fetch('database.json');
+                const db = await response.json();
+                const profiles = db.funding_profiles;
+
+                // 1. Calculate KPIs
+                let totalRaised = 0;
+                let fullyFunded = 0;
+                let cropCounts = {};
+
+                profiles.forEach(p => {
+                    totalRaised += p.raised;
+                    if(p.raised >= p.goal) fullyFunded++;
+
+                    // Count crops for the pie chart
+                    cropCounts[p.crop] = (cropCounts[p.crop] || 0) + 1;
+                });
+
+                // Update KPI displays with loading animation
+                const kpiFarmers = document.getElementById('kpiFarmers');
+                const kpiCapital = document.getElementById('kpiCapital');
+                const kpiFunded = document.getElementById('kpiFunded');
+
+                kpiFarmers.classList.add('loading');
+                kpiCapital.classList.add('loading');
+                kpiFunded.classList.add('loading');
+
+                setTimeout(() => {
+                    kpiFarmers.innerText = profiles.length;
+                    kpiCapital.innerText = '₹' + (totalRaised / 100000).toFixed(2) + 'L';
+                    kpiFunded.innerText = fullyFunded;
+
+                    kpiFarmers.classList.remove('loading');
+                    kpiCapital.classList.remove('loading');
+                    kpiFunded.classList.remove('loading');
+                }, 500);
+
+                // 2. Populate Recent Table (Grab last 3)
+                const tbody = document.getElementById('recentTable');
+                const lastThree = profiles.slice(-3).reverse();
+
+                tbody.innerHTML = ''; // Clear existing content
+
+                lastThree.forEach((p, index) => {
+                    const row = document.createElement('tr');
+                    row.style.animation = `fadeIn 0.5s ease-out ${index * 0.1}s both`;
+
+                    row.innerHTML = `
+                        <td>
+                            <div class="farmer-name">${p.name}</div>
+                            <div class="farmer-location">${p.location}</div>
+                        </td>
+                        <td>
+                            <span class="crop-badge">${p.crop}</span>
+                        </td>
+                        <td class="funding-amount">₹${p.goal.toLocaleString()}</td>
+                    `;
+
+                    tbody.appendChild(row);
+                });
+
+                // 3. Render Crop Doughnut Chart
+                new Chart(document.getElementById('cropChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(cropCounts),
+                        datasets: [{
+                            data: Object.values(cropCounts),
+                            backgroundColor: ['#16a34a', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'],
+                            borderWidth: 0,
+                            hoverOffset: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true,
+                                    font: {
+                                        size: 12,
+                                        weight: '500'
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true
+                        }
+                    }
+                });
+
+                // 4. Render Funding Line Chart (Simulated 6-month ramp up to current total)
+                const currentLakhs = totalRaised / 100000;
+                const fundingData = [
+                    currentLakhs * 0.1,
+                    currentLakhs * 0.3,
+                    currentLakhs * 0.45,
+                    currentLakhs * 0.7,
+                    currentLakhs * 0.85,
+                    currentLakhs
+                ];
+
+                new Chart(document.getElementById('fundingChart'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr (Now)'],
+                        datasets: [{
+                            label: 'Capital Raised (₹ Lakhs)',
+                            data: fundingData,
+                            borderColor: '#16a34a',
+                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#16a34a',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 2000,
+                            easing: 'easeInOutQuart'
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error("Dashboard DB Load Error", error);
+                // Show error state
+                document.getElementById('kpiFarmers').innerText = 'Error';
+                document.getElementById('kpiCapital').innerText = 'Error';
+                document.getElementById('kpiFunded').innerText = 'Error';
+            }
+        }
+
+        // Add fadeIn animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Quick Actions Function
+        function quickAction(action) {
+            const actions = {
+                'funding': 'funding.html',
+                'contract': 'contracts.html',
+                'market': 'market.html',
+                'weather': 'weather.html'
+            };
+
+            if (actions[action]) {
+                window.location.href = actions[action];
+            }
+        }
+
+        // Enhanced notification system
+        function showDashboardNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#16a34a' : type === 'error' ? '#ef4444' : '#6b7280'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                font-weight: 600;
+                animation: slideInRight 0.3s ease;
+                max-width: 400px;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Add notification animations
+        const notificationStyle = document.createElement('style');
+        notificationStyle.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(notificationStyle);
+
+        window.onload = buildDashboard;
+    </script>
+</body>
+</html>

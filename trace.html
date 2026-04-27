@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Traceability & Certification</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background-color: transparent; padding-bottom: 40px; }
+        
+        .cert-card { background: var(--bg-surface); border: 1px solid var(--primary-color); border-radius: var(--radius); padding: 32px; box-shadow: 0 10px 25px rgba(22, 163, 74, 0.15); display: none; margin-top: 24px; position: relative; overflow: hidden; }
+        
+        /* Watermark effect */
+        .cert-card::before { content: "VERIFIED"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 8rem; font-weight: 900; color: rgba(22, 163, 74, 0.03); pointer-events: none; }
+
+        .qr-container { display: flex; align-items: center; justify-content: center; background: #fff; padding: 16px; border-radius: 12px; border: 2px dashed var(--border-color); width: 200px; height: 200px; margin: 0 auto; }
+        
+        .timeline { margin-top: 24px; border-left: 3px solid var(--primary-color); padding-left: 24px; margin-left: 12px; }
+        .timeline-item { position: relative; margin-bottom: 24px; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before { content: ""; position: absolute; left: -32px; top: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--primary-color); border: 3px solid #fff; box-shadow: 0 0 0 2px var(--primary-color); }
+        
+        .timeline-date { font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 4px; display: block; }
+        .timeline-title { font-weight: 700; color: var(--text-primary); font-size: 1.05rem; }
+        .timeline-desc { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
+
+        .btn-generate { background: #111827; color: white; border: none; padding: 14px 24px; font-size: 1rem; width: 100%; max-width: 300px; }
+        .btn-generate:hover { background: #374151; }
+        
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header" style="text-align: center; margin-bottom: 40px;">
+            <h1>Digital Crop Certification</h1>
+            <p class="subtitle">Generate an immutable, blockchain-backed traceability record for corporate buyers.</p>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="btn-generate" id="genBtn" onclick="generateCertificate()">
+                Generate Digital Certificate
+            </button>
+        </div>
+
+        <div class="cert-card" id="certificate">
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px; align-items: center;">
+                
+                <div style="text-align: center;">
+                    <div class="qr-container">
+                        <img id="qrImage" src="" alt="QR Code" style="max-width: 100%; display: none;">
+                    </div>
+                    <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;">SCAN FOR PROVENANCE DATA</p>
+                    <div style="margin-top: 16px; background: #f3f4f6; padding: 8px; border-radius: 8px; font-family: monospace; font-size: 0.8rem;">
+                        Hash: 0x8f2a...9c4b
+                    </div>
+                </div>
+
+                <div>
+                    <h2 style="color: var(--primary-color); margin-bottom: 8px;">Premium Sharbati Wheat</h2>
+                    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 600;">Farmer: Rajesh Kumar | ID: F-102 | Loc: Punjab</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <span class="timeline-date">Nov 15, 2025</span>
+                            <div class="timeline-title">Seed Authentication</div>
+                            <div class="timeline-desc">Certified organic Sharbati seeds procured from State Agri-Board.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-date">Jan 10, 2026</span>
+                            <div class="timeline-title">Pesticide Log: Zero-Chemical</div>
+                            <div class="timeline-desc">Only organic bio-fertilizers applied. Verified via AgriSphere Disease Diagnostics.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-date">April 02, 2026</span>
+                            <div class="timeline-title">Harvest & Quality Check</div>
+                            <div class="timeline-desc">Moisture content locked at 11%. Yield: 50 Tons.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-date">April 25, 2026 (Today)</span>
+                            <div class="timeline-title" style="color: var(--primary-color);">Ready for Corporate Dispatch</div>
+                            <div class="timeline-desc">Contract matched with ITC Agri Business.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateCertificate() {
+            const btn = document.getElementById('genBtn');
+            const cert = document.getElementById('certificate');
+            const qr = document.getElementById('qrImage');
+
+            // Set loading state
+            btn.innerHTML = '<div class="loading-spinner"></div> Writing to Ledger...';
+            btn.disabled = true;
+
+            // Generate a real QR code using an API
+            // The data inside the QR code is a simple text string confirming authenticity
+            const qrData = encodeURIComponent("AgriSphere Verified Provenance\nFarmer: Rajesh K.\nCrop: Sharbati Wheat\nStatus: 100% Organic\nCarbon Footprint: Low");
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${qrData}`;
+
+            setTimeout(() => {
+                qr.src = qrUrl;
+                qr.onload = () => {
+                    qr.style.display = 'block';
+                    cert.style.display = 'block';
+                    btn.innerHTML = 'Certificate Generated ✅';
+                    btn.style.background = 'var(--primary-color)';
+                };
+            }, 1500); // 1.5 second simulated blockchain delay
+        }
+    </script>
+</body>
+</html>

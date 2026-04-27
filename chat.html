@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Krishi Mitra Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <style>
+        body { background-color: transparent; overflow: hidden; }
+        .chat-container { display: flex; height: calc(100vh - 120px); background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
+        
+        .chat-sidebar { width: 250px; border-right: 1px solid var(--border-color); background: #f9fafb; display: flex; flex-direction: column; }
+        .channel { padding: 16px; cursor: pointer; border-bottom: 1px solid var(--border-color); font-weight: 500; transition: 0.2s; }
+        .channel.active { background: #e0f2fe; color: #0284c7; border-left: 4px solid #0284c7; }
+        
+        .chat-main { flex: 1; display: flex; flex-direction: column; background: #ffffff; }
+        .chat-header { padding: 16px; border-bottom: 1px solid var(--border-color); font-weight: bold; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
+        
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #f8fafc; }
+        
+        .msg-bubble { max-width: 75%; display: flex; gap: 12px; animation: fadeIn 0.3s ease; }
+        .msg-avatar { width: 36px; height: 36px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; flex-shrink: 0; }
+        .msg-content { background: #ffffff; padding: 12px 16px; border-radius: 0 12px 12px 12px; font-size: 0.9rem; color: var(--text-primary); box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .msg-meta { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; display: block; }
+        
+        .msg-bubble.self { align-self: flex-end; flex-direction: row-reverse; }
+        .msg-bubble.self .msg-avatar { background: #111827; }
+        .msg-bubble.self .msg-content { background: #dcfce7; border-radius: 12px 0 12px 12px; border: 1px solid #bbf7d0; }
+        .msg-bubble.self .msg-meta { text-align: right; }
+        
+        .chat-input-area { padding: 16px; border-top: 1px solid var(--border-color); display: flex; gap: 12px; background: #ffffff; }
+        .chat-input { flex: 1; padding: 12px 20px; border: 1px solid var(--border-color); border-radius: 24px; outline: none; background: #f1f5f9; }
+        .chat-input:focus { border-color: var(--primary-color); background: #ffffff; }
+        .send-btn { border-radius: 24px; padding: 0 24px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="page-container" style="padding-top: 20px;">
+        <div class="chat-container">
+            <div class="chat-sidebar">
+                <div style="padding: 16px; font-weight: bold; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase;">Community Channels</div>
+                <div class="channel active"># general-farming</div>
+                <div class="channel"># wheat-growers</div>
+                <div class="channel"># market-prices</div>
+            </div>
+
+            <div class="chat-main">
+                <div class="chat-header">
+                    <span># general-farming</span>
+                    <span style="font-size: 0.8rem; font-weight: normal; color: var(--primary-color); background: #dcfce7; padding: 4px 10px; border-radius: 12px;">Live Sync Active</span>
+                </div>
+                
+                <div class="chat-messages" id="chatBox">
+                    </div>
+
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" id="msgInput" placeholder="Ask the community..." onkeypress="handleKeyPress(event)">
+                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // 1. PASTE YOUR FIREBASE CONFIG HERE
+        // =========================================================
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // 2. GET USER ID FROM LOGIN SCREEN (Or assign Guest)
+        const currentUserPhone = localStorage.getItem('agriUserPhone') || 'Guest_Farmer';
+
+        // 3. LISTEN FOR NEW MESSAGES IN REAL-TIME
+        const chatBox = document.getElementById('chatBox');
+        
+        db.ref('community_chat').on('child_added', (snapshot) => {
+            const msg = snapshot.val();
+            const isSelf = msg.phone === currentUserPhone;
+            
+            // Generate initials for avatar (e.g. "+91 98..." -> "98")
+            const initials = msg.phone === 'Guest_Farmer' ? 'GF' : msg.phone.substring(4, 6);
+
+            const bubble = `
+                <div class="msg-bubble ${isSelf ? 'self' : ''}">
+                    <div class="msg-avatar">${initials}</div>
+                    <div>
+                        <span class="msg-meta">${isSelf ? 'You' : msg.phone} • ${msg.time}</span>
+                        <div class="msg-content">${msg.text}</div>
+                    </div>
+                </div>
+            `;
+            chatBox.innerHTML += bubble;
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to bottom
+        });
+
+        // 4. SEND MESSAGE TO FIREBASE
+        function sendMessage() {
+            const input = document.getElementById('msgInput');
+            const text = input.value.trim();
+            if(!text) return;
+
+            const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // Push to Firebase Realtime Database
+            db.ref('community_chat').push({
+                phone: currentUserPhone,
+                text: text,
+                time: timeNow,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            input.value = ''; // Clear input
+        }
+
+        function handleKeyPress(e) {
+            if(e.key === 'Enter') sendMessage();
+        }
+    </script>
+</body>
+</html>

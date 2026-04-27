@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Crop Predictor</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+        }
+
+        .predictor-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .predictor-hero {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #16a34a 100%);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(22, 163, 74, 0.2);
+        }
+
+        .predictor-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #f0fdf4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Main Predictor Section */
+        .predictor-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Input Section */
+        .input-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .input-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .input-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-subtitle {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            outline: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #111827;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-field:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .input-field::placeholder {
+            color: #9ca3af;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 1.25rem;
+        }
+
+        .predict-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .predict-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .predict-btn:hover::before {
+            left: 100%;
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3);
+        }
+
+        .predict-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .predict-btn.loading {
+            pointer-events: none;
+        }
+
+        .predict-btn.loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results-placeholder {
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .placeholder-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .placeholder-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .placeholder-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .results-content {
+            display: none;
+            text-align: center;
+            width: 100%;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .results-header {
+            margin-bottom: 2rem;
+        }
+
+        .results-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .crop-name {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #16a34a;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .confidence-section {
+            background: rgba(22, 163, 74, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(22, 163, 74, 0.2);
+        }
+
+        .confidence-label {
+            font-size: 0.9rem;
+            color: #166534;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+            border-radius: 4px;
+            transition: width 1s ease-out;
+        }
+
+        .confidence-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #16a34a;
+        }
+
+        .results-footer {
+            color: #6b7280;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Info Cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #16a34a;
+        }
+
+        .info-card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card-text {
+            color: #6b7280;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .predictor-container {
+                padding: 1rem;
+            }
+
+            .predictor-hero {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .predictor-main {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .crop-name {
+                font-size: 2.5rem;
+            }
+
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="predictor-container">
+        <!-- Hero Section -->
+        <div class="predictor-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">🤖 AI Crop Predictor</h1>
+                <p class="hero-subtitle">
+                    Leverage machine learning to analyze your soil composition and receive personalized crop recommendations for maximum yield and profitability.
+                </p>
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🧪</span>
+                        <span class="feature-text">Soil Analysis</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎯</span>
+                        <span class="feature-text">Precision Recommendations</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text">Data-Driven Insights</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Predictor Section -->
+        <div class="predictor-main">
+            <!-- Input Section -->
+            <div class="input-section">
+                <div class="input-header">
+                    <h2 class="input-title">Soil Analysis Input</h2>
+                    <p class="input-subtitle">
+                        Enter your soil test results to get AI-powered crop recommendations tailored to your land's unique characteristics.
+                    </p>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label class="input-label">Nitrogen (N)</label>
+                        <input type="number" class="input-field" id="n_val" placeholder="85">
+                        <span class="input-icon">mg/kg</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Phosphorus (P)</label>
+                        <input type="number" class="input-field" id="p_val" placeholder="42">
+                        <span class="input-icon">mg/kg</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Potassium (K)</label>
+                        <input type="number" class="input-field" id="k_val" placeholder="40">
+                        <span class="input-icon">mg/kg</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Soil pH</label>
+                        <input type="number" step="0.1" class="input-field" id="ph_val" placeholder="6.5">
+                        <span class="input-icon">pH</span>
+                    </div>
+                </div>
+
+                <button class="predict-btn" id="aiBtn" onclick="recommendCrop()">
+                    <span>🧠</span>
+                    Generate AI Recommendation
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <div class="results-placeholder">
+                    <div class="placeholder-icon">🌱</div>
+                    <h3 class="placeholder-title">Ready for Analysis</h3>
+                    <p class="placeholder-text">
+                        Enter your soil parameters and click "Generate AI Recommendation" to receive personalized crop suggestions.
+                    </p>
+                </div>
+
+                <div class="results-content" id="resultsContent">
+                    <div class="results-header">
+                        <div class="results-label">Recommended Crop</div>
+                        <div class="crop-name" id="cropName">---</div>
+                    </div>
+
+                    <div class="confidence-section">
+                        <div class="confidence-label">Model Confidence</div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="confidenceFill" style="width: 0%"></div>
+                        </div>
+                        <div class="confidence-value" id="cropConf">0%</div>
+                    </div>
+
+                    <div class="results-footer">
+                        Powered by AgriSphere Local Python Microservice
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-card-icon">🧪</div>
+                <h4 class="info-card-title">Soil Macronutrients</h4>
+                <p class="info-card-text">
+                    Nitrogen, Phosphorus, and Potassium are essential nutrients that determine crop suitability and yield potential.
+                </p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon">⚖️</div>
+                <h4 class="info-card-title">pH Balance</h4>
+                <p class="info-card-text">
+                    Soil acidity affects nutrient availability. Most crops prefer slightly acidic to neutral pH levels (6.0-7.0).
+                </p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon">🤖</div>
+                <h4 class="info-card-title">AI-Powered Analysis</h4>
+                <p class="info-card-text">
+                    Our machine learning model analyzes thousands of soil-crop combinations to provide accurate recommendations.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function recommendCrop() {
+            const btn = document.getElementById('aiBtn');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContent = document.getElementById('resultsContent');
+            const placeholder = document.querySelector('.results-placeholder');
+
+            const payload = {
+                nitrogen: document.getElementById('n_val').value || 0,
+                phosphorus: document.getElementById('p_val').value || 0,
+                potassium: document.getElementById('k_val').value || 0,
+                ph: document.getElementById('ph_val').value || 7
+            };
+
+            // Update button state
+            btn.classList.add('loading');
+            btn.innerHTML = "🧠 Analyzing Soil Data...";
+            btn.disabled = true;
+
+            // Hide placeholder, show loading state
+            placeholder.style.display = 'none';
+
+            try {
+                // Ping the Python server
+                const response = await fetch('http://localhost:5000/api/predict_crop', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                // Populate results
+                document.getElementById('cropName').innerText = data.recommended_crop;
+                document.getElementById('cropConf').innerText = data.confidence + "%";
+
+                // Animate confidence bar
+                const confidenceFill = document.getElementById('confidenceFill');
+                setTimeout(() => {
+                    confidenceFill.style.width = data.confidence + "%";
+                }, 500);
+
+                // Show results
+                resultsContent.style.display = 'block';
+
+            } catch (error) {
+                console.error(error);
+                alert("Error: Cannot reach Python Backend. Is your Flask server (app.py) running on port 5000?");
+
+                // Reset to placeholder on error
+                placeholder.style.display = 'block';
+                resultsContent.style.display = 'none';
+            } finally {
+                // Reset button
+                btn.classList.remove('loading');
+                btn.innerHTML = "<span>🧠</span> Generate AI Recommendation";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

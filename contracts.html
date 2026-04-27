@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSphere - Corporate Contracts</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Enhanced header with contract theme */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #16a34a, #22c55e, #16a34a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #4b5563;
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Contract statistics */
+        .contract-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #16a34a;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Enhanced contract cards */
+        .contract-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            position: relative;
+        }
+
+        .contract-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(22, 163, 74, 0.2);
+        }
+
+        .corp-header {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding: 2rem;
+            border-bottom: 1px solid rgba(22, 163, 74, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .corp-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .corp-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .corp-details h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .corp-requirement {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .price-section {
+            text-align: right;
+        }
+
+        .price-badge {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+        }
+
+        .price-unit {
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .contract-content {
+            padding: 2rem;
+        }
+
+        .contract-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .progress-section {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(22, 163, 74, 0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .progress-stats {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .progress-bg {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+            border-radius: 6px;
+            transition: width 0.8s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .contract-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .commit-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 2px solid rgba(22, 163, 74, 0.1);
+            text-align: center;
+        }
+
+        .commit-options {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .commit-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .commit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .commit-btn:hover::before {
+            left: 100%;
+        }
+
+        .commit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3);
+        }
+
+        .custom-commit {
+            margin-top: 1rem;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .custom-input:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            outline: none;
+        }
+
+        .commit-custom-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(22, 163, 74, 0.1);
+            color: #16a34a;
+            border: 2px solid rgba(22, 163, 74, 0.2);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .commit-custom-btn:hover {
+            background: #16a34a;
+            color: white;
+            border-color: #16a34a;
+        }
+
+        /* Contract status indicators */
+        .contract-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+        }
+
+        .status-closing {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .contract-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 1rem;
+            }
+
+            .page-header {
+                padding: 2rem 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .corp-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .price-section {
+                text-align: center;
+            }
+
+            .contract-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .commit-options {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .contract-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Enhanced header -->
+        <div class="page-header">
+            <h1>🤝 Corporate Contracts</h1>
+            <p class="subtitle">Secure your harvest future with guaranteed prices. Partner with industry leaders and eliminate market volatility through forward contracts.</p>
+        </div>
+
+        <!-- Contract statistics -->
+        <div class="contract-stats">
+            <div class="stat-card">
+                <span class="stat-icon">📊</span>
+                <span class="stat-value" id="totalContracts">2</span>
+                <span class="stat-label">Active Contracts</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">💰</span>
+                <span class="stat-value" id="totalValue">₹8,250</span>
+                <span class="stat-label">Avg. Price/Qtl</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📅</span>
+                <span class="stat-value" id="totalCommitted">1,850</span>
+                <span class="stat-label">Tons Committed</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🎯</span>
+                <span class="stat-value" id="totalTarget">6,000</span>
+                <span class="stat-label">Tons Targeted</span>
+            </div>
+        </div>
+
+        <!-- Enhanced contract cards -->
+        <div class="contract-card" style="animation-delay: 0.1s;">
+            <div class="contract-status status-active">Active</div>
+            <div class="corp-header">
+                <div class="corp-info">
+                    <div class="corp-logo" style="background: linear-gradient(135deg, #dc2626, #ef4444);">L</div>
+                    <div class="corp-details">
+                        <h3>Lay's India</h3>
+                        <div class="corp-requirement">Processing Potatoes (Chipsona Variety)</div>
+                    </div>
+                </div>
+                <div class="price-section">
+                    <div class="price-badge">
+                        ₹1,850 <span class="price-unit">/ Quintal</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contract-content">
+                <div class="contract-grid">
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-title">Contract Progress</span>
+                            <span class="progress-stats">Target: 1,000 Tons</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" id="laysBar" style="width: 65%;"></div>
+                        </div>
+                        <div class="contract-details">
+                            <div class="detail-item">
+                                <span>📦</span>
+                                <span><span id="laysCommitted">650</span> Tons Committed</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>📅</span>
+                                <span>Delivery Window: March 2026</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>🏭</span>
+                                <span>Processing facility commitment included</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="commit-section">
+                        <div class="commit-options">
+                            <button class="commit-btn" onclick="commitYield('lays', 25)">25 Tons</button>
+                            <button class="commit-btn" onclick="commitYield('lays', 50)">50 Tons</button>
+                        </div>
+                        <div class="custom-commit">
+                            <input type="number" class="custom-input" id="laysCustom" placeholder="Custom amount (tons)" min="1">
+                            <button class="commit-custom-btn" onclick="commitCustomYield('lays')">Commit Custom Amount</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contract-card" style="animation-delay: 0.2s;">
+            <div class="contract-status status-active">Active</div>
+            <div class="corp-header">
+                <div class="corp-info">
+                    <div class="corp-logo" style="background: linear-gradient(135deg, #4f46e5, #6366f1);">I</div>
+                    <div class="corp-details">
+                        <h3>ITC Agri Business</h3>
+                        <div class="corp-requirement">High-Quality Wheat (Sharbati Variety)</div>
+                    </div>
+                </div>
+                <div class="price-section">
+                    <div class="price-badge">
+                        ₹2,400 <span class="price-unit">/ Quintal</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contract-content">
+                <div class="contract-grid">
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-title">Contract Progress</span>
+                            <span class="progress-stats">Target: 5,000 Tons</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" id="itcBar" style="width: 24%;"></div>
+                        </div>
+                        <div class="contract-details">
+                            <div class="detail-item">
+                                <span>📦</span>
+                                <span><span id="itcCommitted">1,200</span> Tons Committed</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>📅</span>
+                                <span>Delivery Window: April 2026</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>⭐</span>
+                                <span>Premium quality standards apply</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="commit-section">
+                        <div class="commit-options">
+                            <button class="commit-btn" onclick="commitYield('itc', 50)">50 Tons</button>
+                            <button class="commit-btn" onclick="commitYield('itc', 100)">100 Tons</button>
+                        </div>
+                        <div class="custom-commit">
+                            <input type="number" class="custom-input" id="itcCustom" placeholder="Custom amount (tons)" min="1">
+                            <button class="commit-custom-btn" onclick="commitCustomYield('itc')">Commit Custom Amount</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced contract data with statistics tracking
+        let contractData = {
+            lays: { current: 650, total: 1000, price: 1850 },
+            itc: { current: 1200, total: 5000, price: 2400 }
+        };
+
+        function updateStatistics() {
+            const totalContracts = Object.keys(contractData).length;
+            const totalCommitted = Object.values(contractData).reduce((sum, contract) => sum + contract.current, 0);
+            const totalTarget = Object.values(contractData).reduce((sum, contract) => sum + contract.total, 0);
+            const avgPrice = Math.round(Object.values(contractData).reduce((sum, contract) => sum + contract.price, 0) / totalContracts);
+
+            document.getElementById('totalContracts').textContent = totalContracts;
+            document.getElementById('totalCommitted').textContent = totalCommitted.toLocaleString();
+            document.getElementById('totalTarget').textContent = totalTarget.toLocaleString();
+            document.getElementById('totalValue').textContent = `₹${avgPrice.toLocaleString()}`;
+        }
+
+        function commitYield(company, amount) {
+            if(confirm(`Are you sure you want to legally commit ${amount} tons to this contract? This action cannot be undone.`)) {
+                // Update Data
+                contractData[company].current += amount;
+
+                // Calculate new percentage
+                let pct = (contractData[company].current / contractData[company].total) * 100;
+                if(pct > 100) pct = 100;
+
+                // Update DOM
+                document.getElementById(`${company}Committed`).innerText = contractData[company].current.toLocaleString();
+                document.getElementById(`${company}Bar`).style.width = `${pct}%`;
+
+                // Update statistics
+                updateStatistics();
+
+                // Show success notification
+                showNotification(`✅ Successfully committed ${amount} tons! Digital contract generated.`, 'success');
+            }
+        }
+
+        function commitCustomYield(company) {
+            const inputId = `${company}Custom`;
+            const amount = parseInt(document.getElementById(inputId).value);
+
+            if (!amount || amount <= 0) {
+                showNotification('❌ Please enter a valid amount greater than 0.', 'error');
+                return;
+            }
+
+            if(confirm(`Are you sure you want to legally commit ${amount} tons to this contract? This action cannot be undone.`)) {
+                // Update Data
+                contractData[company].current += amount;
+
+                // Calculate new percentage
+                let pct = (contractData[company].current / contractData[company].total) * 100;
+                if(pct > 100) pct = 100;
+
+                // Update DOM
+                document.getElementById(`${company}Committed`).innerText = contractData[company].current.toLocaleString();
+                document.getElementById(`${company}Bar`).style.width = `${pct}%`;
+
+                // Clear input
+                document.getElementById(inputId).value = '';
+
+                // Update statistics
+                updateStatistics();
+
+                // Show success notification
+                showNotification(`✅ Successfully committed ${amount} tons! Digital contract generated.`, 'success');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#16a34a' : type === 'error' ? '#ef4444' : '#6b7280'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                font-weight: 600;
+                animation: slideInRight 0.3s ease;
+                max-width: 400px;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Add notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        window.onload = function() {
+            updateStatistics();
+        };
+    </script>
+</body>
+</html>

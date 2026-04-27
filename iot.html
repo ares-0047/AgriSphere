@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IoT Hardware Sensors</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+        }
+
+        .iot-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .iot-hero {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #16a34a 100%);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(22, 163, 74, 0.2);
+        }
+
+        .iot-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title-section {
+            flex: 1;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #f0fdf4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hero-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .live-dot {
+            height: 12px;
+            width: 12px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        .live-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .ping-btn {
+            background: rgba(255, 255, 255, 0.9);
+            color: #16a34a;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ping-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Sensors Grid */
+        .sensors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .sensor-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sensor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+        }
+
+        .sensor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .sensor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .sensor-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-optimal {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-low {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .status-stable {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .sensor-gauge {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .gauge-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 800;
+            color: #111827;
+            z-index: 2;
+        }
+
+        .gauge-unit {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-left: 0.25rem;
+        }
+
+        .sensor-info {
+            text-align: center;
+        }
+
+        .sensor-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .sensor-recommendation {
+            font-size: 0.85rem;
+            color: #374151;
+            line-height: 1.5;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Sensor Details */
+        .sensor-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .detail-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-text {
+            color: #6b7280;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .iot-container {
+                padding: 1rem;
+            }
+
+            .iot-hero {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .sensors-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .sensor-gauge {
+                height: 150px;
+            }
+
+            .gauge-value {
+                font-size: 1.5rem;
+            }
+
+            .sensor-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="iot-container">
+        <!-- Hero Section -->
+        <div class="iot-hero">
+            <div class="hero-content">
+                <div class="hero-header">
+                    <div class="hero-title-section">
+                        <h1 class="hero-title">🌐 Smart Sensor Hub</h1>
+                        <p class="hero-subtitle">
+                            Real-time telemetry from IoT ground sensors providing live field intelligence for precision agriculture.
+                        </p>
+                    </div>
+                    <div class="hero-controls">
+                        <div class="live-indicator">
+                            <div class="live-dot"></div>
+                            <span class="live-text">Node 48A Online</span>
+                        </div>
+                        <button class="ping-btn" onclick="simulateLiveData()">
+                            <span>🔄</span>
+                            Ping Sensors
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Monitoring</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">99.9%</span>
+                        <span class="stat-label">Uptime</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15min</span>
+                        <span class="stat-label">Update Interval</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sensors Grid -->
+        <div class="sensors-grid">
+            <div class="sensor-card">
+                <div class="sensor-header">
+                    <h3 class="sensor-title">💧 Soil Moisture</h3>
+                    <span class="status-badge status-optimal" id="moistStatus">OPTIMAL</span>
+                </div>
+                <div class="sensor-gauge">
+                    <canvas id="moistureGauge"></canvas>
+                    <div class="gauge-value" id="moistVal">42<span class="gauge-unit">%</span></div>
+                </div>
+                <div class="sensor-info">
+                    <div class="sensor-label">Irrigation Status</div>
+                    <div class="sensor-recommendation" id="moistRec">Irrigation Valve: CLOSED</div>
+                </div>
+            </div>
+
+            <div class="sensor-card">
+                <div class="sensor-header">
+                    <h3 class="sensor-title">🧪 Nitrogen Level</h3>
+                    <span class="status-badge status-low" id="nStatus">LOW</span>
+                </div>
+                <div class="sensor-gauge">
+                    <canvas id="nGauge"></canvas>
+                    <div class="gauge-value" id="nVal">18<span class="gauge-unit">mg/kg</span></div>
+                </div>
+                <div class="sensor-info">
+                    <div class="sensor-label">Fertilizer Recommendation</div>
+                    <div class="sensor-recommendation" id="nRec">Urea Application Recommended</div>
+                </div>
+            </div>
+
+            <div class="sensor-card">
+                <div class="sensor-header">
+                    <h3 class="sensor-title">⚖️ Soil pH</h3>
+                    <span class="status-badge status-stable" id="phStatus">STABLE</span>
+                </div>
+                <div class="sensor-gauge">
+                    <canvas id="phGauge"></canvas>
+                    <div class="gauge-value" id="phVal">6.8</div>
+                </div>
+                <div class="sensor-info">
+                    <div class="sensor-label">Crop Suitability</div>
+                    <div class="sensor-recommendation" id="phRec">Perfect for Wheat/Soybean</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sensor Details -->
+        <div class="sensor-details">
+            <div class="detail-card">
+                <div class="detail-icon">📡</div>
+                <h4 class="detail-title">Wireless Connectivity</h4>
+                <p class="detail-text">
+                    Sensors communicate via LoRaWAN network with 10km range and battery life up to 5 years.
+                </p>
+            </div>
+            <div class="detail-card">
+                <div class="detail-icon">⚡</div>
+                <h4 class="detail-title">Automated Actions</h4>
+                <p class="detail-text">
+                    Smart irrigation valves and fertilizer dispensers activate automatically based on sensor readings.
+                </p>
+            </div>
+            <div class="detail-card">
+                <div class="detail-icon">📊</div>
+                <h4 class="detail-title">Data Analytics</h4>
+                <p class="detail-text">
+                    Historical data trends help predict optimal planting times and resource requirements.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gaugeOptions = {
+            rotation: 270,
+            circumference: 180,
+            cutout: '80%',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            },
+            animation: {
+                animateRotate: true,
+                animateScale: false,
+                duration: 1000,
+                easing: 'easeOutQuart'
+            }
+        };
+
+        // Create Gauges
+        const moistCtx = document.getElementById('moistureGauge').getContext('2d');
+        let moistChart = new Chart(moistCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [42, 58],
+                    backgroundColor: ['#16a34a', '#e5e7eb'],
+                    borderWidth: 0,
+                    borderRadius: 4
+                }]
+            },
+            options: gaugeOptions
+        });
+
+        const nCtx = document.getElementById('nGauge').getContext('2d');
+        let nChart = new Chart(nCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [18, 82],
+                    backgroundColor: ['#ef4444', '#e5e7eb'],
+                    borderWidth: 0,
+                    borderRadius: 4
+                }]
+            },
+            options: gaugeOptions
+        });
+
+        const phCtx = document.getElementById('phGauge').getContext('2d');
+        let phChart = new Chart(phCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [68, 32],
+                    backgroundColor: ['#16a34a', '#e5e7eb'],
+                    borderWidth: 0,
+                    borderRadius: 4
+                }]
+            },
+            options: gaugeOptions
+        });
+
+        function updateStatusBadge(elementId, value, type) {
+            const badge = document.getElementById(elementId);
+            badge.className = 'status-badge';
+
+            if (type === 'moisture') {
+                if (value >= 40 && value <= 60) {
+                    badge.classList.add('status-optimal');
+                    badge.textContent = 'OPTIMAL';
+                } else if (value < 30) {
+                    badge.classList.add('status-low');
+                    badge.textContent = 'LOW';
+                } else {
+                    badge.classList.add('status-stable');
+                    badge.textContent = 'HIGH';
+                }
+            } else if (type === 'nitrogen') {
+                if (value >= 25) {
+                    badge.classList.add('status-optimal');
+                    badge.textContent = 'OPTIMAL';
+                } else if (value >= 20) {
+                    badge.classList.add('status-stable');
+                    badge.textContent = 'MODERATE';
+                } else {
+                    badge.classList.add('status-low');
+                    badge.textContent = 'LOW';
+                }
+            } else if (type === 'ph') {
+                if (value >= 6.0 && value <= 7.5) {
+                    badge.classList.add('status-optimal');
+                    badge.textContent = 'OPTIMAL';
+                } else {
+                    badge.classList.add('status-stable');
+                    badge.textContent = 'ADJUST';
+                }
+            }
+        }
+
+        function simulateLiveData() {
+            // Generate Random Fluctuations
+            const newMoist = Math.floor(Math.random() * 20) + 30; // 30 to 50
+            const newN = Math.floor(Math.random() * 15) + 15; // 15 to 30
+            const newPh = (Math.random() * 1.5 + 6.0).toFixed(1); // 6.0 to 7.5
+
+            // Update DOM Values
+            document.getElementById('moistVal').innerText = newMoist;
+            document.getElementById('nVal').innerText = newN;
+            document.getElementById('phVal').innerText = newPh;
+
+            // Update Status Badges
+            updateStatusBadge('moistStatus', newMoist, 'moisture');
+            updateStatusBadge('nStatus', newN, 'nitrogen');
+            updateStatusBadge('phStatus', parseFloat(newPh), 'ph');
+
+            // Update Recommendations
+            const moistRec = document.getElementById('moistRec');
+            const nRec = document.getElementById('nRec');
+            const phRec = document.getElementById('phRec');
+
+            if (newMoist < 35) {
+                moistRec.textContent = 'Irrigation Valve: OPENING';
+            } else {
+                moistRec.textContent = 'Irrigation Valve: CLOSED';
+            }
+
+            if (newN < 20) {
+                nRec.textContent = 'Urea Application Recommended';
+            } else if (newN < 25) {
+                nRec.textContent = 'Monitor Nitrogen Levels';
+            } else {
+                nRec.textContent = 'Nitrogen Levels Optimal';
+            }
+
+            if (parseFloat(newPh) >= 6.0 && parseFloat(newPh) <= 7.5) {
+                phRec.textContent = 'Perfect for Wheat/Soybean';
+            } else {
+                phRec.textContent = 'Consider pH Adjustment';
+            }
+
+            // Update Charts with smooth animation
+            moistChart.data.datasets[0].data = [newMoist, 100 - newMoist];
+            moistChart.data.datasets[0].backgroundColor[0] = newMoist < 35 ? '#ef4444' : '#16a34a';
+            moistChart.update();
+
+            nChart.data.datasets[0].data = [newN, 100 - newN];
+            nChart.data.datasets[0].backgroundColor[0] = newN < 20 ? '#ef4444' : newN < 25 ? '#f59e0b' : '#16a34a';
+            nChart.update();
+
+            phChart.data.datasets[0].data = [newPh * 10, 100 - (newPh * 10)];
+            phChart.data.datasets[0].backgroundColor[0] = (parseFloat(newPh) >= 6.0 && parseFloat(newPh) <= 7.5) ? '#16a34a' : '#f59e0b';
+            phChart.update();
+        }
+
+        // Initialize status badges
+        updateStatusBadge('moistStatus', 42, 'moisture');
+        updateStatusBadge('nStatus', 18, 'nitrogen');
+        updateStatusBadge('phStatus', 6.8, 'ph');
+
+        // Simulate incoming data every 5 seconds
+        setInterval(simulateLiveData, 5000);
+    </script>
+</body>
+</html>

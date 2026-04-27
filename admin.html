@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSphere - Leaderboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Enhanced Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #16a34a, #22c55e, #16a34a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #4b5563;
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Top 3 Podium */
+        .podium-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .podium-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .podium-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(22, 163, 74, 0.2);
+        }
+
+        .podium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+        }
+
+        .podium-card.second {
+            margin-top: 2rem;
+        }
+
+        .podium-card.third {
+            margin-top: 4rem;
+        }
+
+        .podium-rank {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .podium-rank.first {
+            background: linear-gradient(135deg, #eab308, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(234, 179, 8, 0.2);
+        }
+
+        .podium-rank.second {
+            background: linear-gradient(135deg, #9ca3af, #6b7280);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .podium-rank.third {
+            background: linear-gradient(135deg, #b45309, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .podium-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
+        }
+
+        .podium-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .podium-state {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .podium-score {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #16a34a;
+            margin-bottom: 0.5rem;
+        }
+
+        .podium-rate {
+            background: rgba(22, 163, 74, 0.1);
+            color: #16a34a;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Filters and Controls */
+        .controls-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 1rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            outline: none;
+        }
+
+        .filter-select {
+            padding: 1rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            outline: none;
+        }
+
+        .recalculate-btn {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
+        }
+
+        .recalculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
+        }
+
+        /* Enhanced Leaderboard Table */
+        .leaderboard-container {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+            animation: fadeInUp 0.6s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-table thead th {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding: 1.5rem 2rem;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(22, 163, 74, 0.1);
+        }
+
+        .leaderboard-table tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background: rgba(22, 163, 74, 0.02);
+            transform: scale(1.01);
+        }
+
+        .leaderboard-table tbody td {
+            padding: 1.5rem 2rem;
+            vertical-align: middle;
+        }
+
+        /* Rank Column */
+        .rank-cell {
+            width: 80px;
+            text-align: center;
+        }
+
+        .rank-badge {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .rank-badge.top3 {
+            background: linear-gradient(135deg, #eab308, #f59e0b);
+            color: white;
+        }
+
+        .rank-badge.standard {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+
+        /* Profile Column */
+        .profile-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
+        }
+
+        .profile-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-state {
+            color: #6b7280;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Score Column */
+        .score-cell {
+            min-width: 200px;
+        }
+
+        .score-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .score-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1s ease-out;
+            position: relative;
+        }
+
+        .score-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        /* Rate Column */
+        .rate-cell {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Badges Column */
+        .badges-cell {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .badge-icon {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #d97706;
+            padding: 0.4rem 0.8rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid #fde68a;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .badge-icon:hover {
+            transform: scale(1.05);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .podium-section {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .podium-card.second,
+            .podium-card.third {
+                margin-top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 1rem;
+            }
+
+            .page-header {
+                padding: 2rem 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .leaderboard-table thead th,
+            .leaderboard-table tbody td {
+                padding: 0.75rem 1rem;
+            }
+
+            .profile-cell {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Enhanced Header -->
+        <div class="page-header">
+            <h1>🏆 Agri-Score Leaderboard</h1>
+            <p class="subtitle">Platform-wide gamification and trust metrics based on loan repayment history, contract fulfillment, and sustainable farming practices.</p>
+        </div>
+
+        <!-- Top 3 Podium -->
+        <div class="podium-section">
+            <div class="podium-card third" style="animation-delay: 0.1s;">
+                <span class="podium-rank third">3</span>
+                <div class="podium-avatar">👩‍🌾</div>
+                <h3 class="podium-name">Priya Sharma</h3>
+                <div class="podium-state">Haryana</div>
+                <div class="podium-score">820</div>
+                <div class="podium-rate">90% Repayment</div>
+            </div>
+
+            <div class="podium-card first" style="animation-delay: 0.2s;">
+                <span class="podium-rank first">1</span>
+                <div class="podium-avatar">👨‍🌾</div>
+                <h3 class="podium-name">Anita Desai</h3>
+                <div class="podium-state">Maharashtra</div>
+                <div class="podium-score">985</div>
+                <div class="podium-rate">100% Repayment</div>
+            </div>
+
+            <div class="podium-card second" style="animation-delay: 0.3s;">
+                <span class="podium-rank second">2</span>
+                <div class="podium-avatar">👨‍🌾</div>
+                <h3 class="podium-name">Rajesh Kumar</h3>
+                <div class="podium-state">Punjab</div>
+                <div class="podium-score">940</div>
+                <div class="podium-rate">100% Repayment</div>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <div class="controls-grid">
+                <input type="text" class="search-input" id="searchAdmin" placeholder="🔍 Search farmer by name or state..." onkeyup="renderLeaderboard()">
+                <select class="filter-select" id="sortFilter" onchange="renderLeaderboard()">
+                    <option value="score">Sort by Score</option>
+                    <option value="rate">Sort by Repayment Rate</option>
+                    <option value="name">Sort by Name</option>
+                </select>
+                <button class="recalculate-btn" onclick="renderLeaderboard(true)">
+                    🔄 Recalculate Scores
+                </button>
+            </div>
+        </div>
+
+        <!-- Enhanced Leaderboard Table -->
+        <div class="leaderboard-container">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Farmer Profile</th>
+                        <th>Agri-Score (Max 1000)</th>
+                        <th>Repayment Rate</th>
+                        <th>Earned Badges</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <!-- Dynamic content will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Leaderboard Data with more details
+        let adminData = [
+            { id: "F-102", name: "Rajesh Kumar", state: "Punjab", score: 940, rate: "100%", badges: ["🌟 Master Grower"], avatar: "👨‍🌾" },
+            { id: "F-045", name: "Anita Desai", state: "Maharashtra", score: 985, rate: "100%", badges: ["🌟 Master Grower", "💳 Elite Borrower"], avatar: "👩‍🌾" },
+            { id: "F-088", name: "Priya Sharma", state: "Haryana", score: 820, rate: "90%", badges: ["🤝 Contract Fulfiller"], avatar: "👩‍🌾" },
+            { id: "F-012", name: "Vikram Singh", state: "Madhya Pradesh", score: 890, rate: "95%", badges: ["🌱 Climate Champion"], avatar: "👨‍🌾" },
+            { id: "F-067", name: "Gopal Reddy", state: "Andhra Pradesh", score: 760, rate: "85%", badges: ["💧 Water Saver"], avatar: "👨‍🌾" },
+            { id: "F-033", name: "Suresh Patel", state: "Gujarat", score: 910, rate: "98%", badges: ["🌟 Master Grower", "🚜 Tech Innovator"], avatar: "👨‍🌾" },
+            { id: "F-156", name: "Meera Joshi", state: "Rajasthan", score: 875, rate: "92%", badges: ["🌾 Organic Pioneer"], avatar: "👩‍🌾" },
+            { id: "F-203", name: "Arun Kumar", state: "Uttar Pradesh", score: 830, rate: "88%", badges: ["📈 Yield Maximizer"], avatar: "👨‍🌾" },
+            { id: "F-178", name: "Kavita Singh", state: "Bihar", score: 795, rate: "87%", badges: ["🌱 Sustainable Farmer"], avatar: "👩‍🌾" },
+            { id: "F-134", name: "Ravi Shankar", state: "Karnataka", score: 920, rate: "96%", badges: ["🚜 Tech Innovator", "💧 Water Saver"], avatar: "👨‍🌾" }
+        ];
+
+        function renderLeaderboard(animate = false) {
+            const tbody = document.getElementById('leaderboardBody');
+            const searchTxt = document.getElementById('searchAdmin').value.toLowerCase();
+            const sortFilter = document.getElementById('sortFilter').value;
+
+            // Filter Data
+            let filtered = adminData.filter(f =>
+                f.name.toLowerCase().includes(searchTxt) ||
+                f.state.toLowerCase().includes(searchTxt) ||
+                f.id.toLowerCase().includes(searchTxt)
+            );
+
+            // Sort Data
+            switch (sortFilter) {
+                case 'rate':
+                    filtered.sort((a, b) => parseInt(b.rate) - parseInt(a.rate));
+                    break;
+                case 'name':
+                    filtered.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                default: // score
+                    filtered.sort((a, b) => b.score - a.score);
+                    break;
+            }
+
+            tbody.innerHTML = '';
+
+            // Render HTML
+            filtered.forEach((farmer, index) => {
+                const rank = index + 1;
+                const isTop3 = rank <= 3;
+
+                // Color logic based on score
+                let color = "#16a34a"; // Green
+                if (farmer.score < 900) color = "#f59e0b"; // Yellow
+                if (farmer.score < 800) color = "#ef4444"; // Red
+
+                let badgesHtml = farmer.badges.map(badge =>
+                    `<span class="badge-icon">${badge}</span>`
+                ).join('');
+
+                const row = `
+                    <tr style="animation: fadeInUp 0.5s ease-out ${index * 0.05}s both; opacity: 0;">
+                        <td class="rank-cell">
+                            <div class="rank-badge ${isTop3 ? 'top3' : 'standard'}">
+                                ${rank}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="profile-cell">
+                                <div class="profile-avatar">${farmer.avatar}</div>
+                                <div class="profile-info">
+                                    <h4>${farmer.name}</h4>
+                                    <div class="profile-state">${farmer.state} • ID: ${farmer.id}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="score-cell">
+                            <span class="score-value" style="color: ${color};">${farmer.score}</span>
+                            <div class="score-bar-bg">
+                                <div class="score-bar-fill" style="width: ${animate ? '0%' : (farmer.score / 10) + '%'}; background: ${color};" data-target="${farmer.score / 10}%"></div>
+                            </div>
+                        </td>
+                        <td class="rate-cell" style="color: ${color};">${farmer.rate}</td>
+                        <td class="badges-cell">${badgesHtml}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            // Trigger animation if requested
+            if(animate) {
+                setTimeout(() => {
+                    document.querySelectorAll('.score-bar-fill').forEach(bar => {
+                        bar.style.width = bar.getAttribute('data-target');
+                    });
+                }, 200);
+            }
+        }
+
+        // Enhanced notification system
+        function showLeaderboardNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#16a34a' : type === 'error' ? '#ef4444' : '#6b7280'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                font-weight: 600;
+                animation: slideInRight 0.3s ease;
+                max-width: 400px;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Add notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize with animation
+        window.onload = () => {
+            setTimeout(() => renderLeaderboard(true), 500);
+        };
+    </script>
+</body>
+</html>
